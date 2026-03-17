@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "594189782744",
+    "project_id": "kf-product",
+    "storage_bucket": "kf-product.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594189782744:android:37d882a2307babe82951ad",
+        "android_client_info": {
+          "package_name": "com.codemenschen.productdeal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1LeQpl0iyorYX7rOPrFq_e9mHSWiLEHQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
