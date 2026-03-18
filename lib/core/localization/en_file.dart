@@ -1008,7 +1008,7 @@ class EnglishFile {
     'noRevenueOrdersYet': 'No delivered orders yet',
     'errorLoading': 'Error loading',
     'activeShops': 'Active Wholesalers',
-    'activeMembers': 'Active Shops / Koisks',
+    'activeMembers': 'Active Shops / Kiosk',
     'inactiveMembers': 'Inactive Shops',
     'activeShopsSubtitle': 'Verified wholesalers on the platform',
     'activeMembersSubtitle': 'Shops that ordered recently',

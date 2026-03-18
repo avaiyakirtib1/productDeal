@@ -327,7 +327,7 @@ class GermanFile {
     'accountType': 'Kontotyp',
     'alreadyHaveAccount': 'Sie haben bereits ein Konto?',
     'login': 'Login',
-    'signIn': 'anmelden',
+    'signIn': 'Anmelden',
     'registrationReceived': 'Anmeldung erhalten! Wir benachrichtigen Sie, sobald das Konto genehmigt wurde.',
     'fullNameRequired': 'Der vollständige Name ist erforderlich',
     'emailRequired': 'E-Mail ist erforderlich',
