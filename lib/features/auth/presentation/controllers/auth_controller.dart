@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/networking/api_exception.dart';
 import '../../../../core/services/fcm_service.dart';
 import '../../../../core/storage/session_storage.dart';
+import '../../../../core/constants/app_languages.dart';
+import '../../../../core/localization/language_controller.dart';
 import '../../data/models/auth_models.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../../orders/presentation/controllers/cart_controller.dart';
@@ -48,6 +50,22 @@ class AuthController extends AsyncNotifier<AuthSession?> {
       return session;
     });
     state = result;
+
+    // If login succeeded and user is admin/sub-admin, enforce German as the language
+    final loggedInUser = result.valueOrNull?.user;
+    if (loggedInUser != null &&
+        (loggedInUser.role == UserRole.admin ||
+            loggedInUser.role == UserRole.subAdmin)) {
+      try {
+        await ref
+            .read(languageControllerProvider.notifier)
+            .setLanguage(AppLanguage.german);
+        debugPrint('🇩🇪 Admin login: language set to German');
+      } catch (e) {
+        debugPrint('⚠️ Failed to set German for admin: $e');
+      }
+    }
+
     // Rethrow so LoginFormController's AsyncValue.guard sees the error and shows error UI/snackbar
     result.whenOrNull(error: (err, _) => throw err);
   }

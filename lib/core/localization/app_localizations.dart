@@ -7,6 +7,7 @@ import 'en_file.dart';
 import 'hi_file.dart';
 import 'ru_file.dart';
 import 'tr_file.dart';
+import 'uk_file.dart';
 import 'ur_file.dart';
 
 class AppLocalizations {
@@ -29,6 +30,7 @@ class AppLocalizations {
     'ur': UrduFile.urduTranslations,
     'hi': HindiFile.hindiTranslations,
     'ru': RussianFile.russianTranslations,
+    'uk': UkrainianFile.ukrainianTranslations,
   };
 
   String translate(String key) {

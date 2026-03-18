@@ -50,8 +50,7 @@ class DashboardScreen extends ConsumerWidget {
                 ref.read(publicBannersProvider.notifier).refresh(),
               ]);
             },
-            onCategoryTap: (category) =>
-                context.push('/categories/${category.slug}'),
+            onCategoryTap: (category) => context.push('/categories/${category.slug}'),
             onStoryTap: (group) {
               final allGroups = ref.read(dashboardControllerProvider).maybeWhen(
                     data: (snapshot) => snapshot.storyGroups,
@@ -69,23 +68,18 @@ class DashboardScreen extends ConsumerWidget {
                 ),
               );
             },
-            onWholesalerTap: (wholesaler) =>
-                context.push('/wholesalers/${wholesaler.id}'),
-            onShowWholesalersTab: () => ref
-                .read(mainTabIndexProvider.notifier)
-                .state = MainTab.wholesalers.tabIndex,
+            onWholesalerTap: (wholesaler) => context.push('/wholesalers/${wholesaler.id}'),
+            onShowWholesalersTab: () =>
+                ref.read(mainTabIndexProvider.notifier).state = MainTab.wholesalers.tabIndex,
           ),
-          loading: () =>
-              const Scaffold(body: Center(child: CircularProgressIndicator())),
+          loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
           error: (error, stackTrace) => _DashboardError(
             message: error.toString(),
-            onRetry: () =>
-                ref.read(dashboardControllerProvider.notifier).refresh(),
+            onRetry: () => ref.read(dashboardControllerProvider.notifier).refresh(),
           ),
         );
       },
-      loading: () =>
-          const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (error, stackTrace) => _DashboardError(
         message: error.toString(),
         onRetry: () => ref.read(authControllerProvider.notifier).hydrate(),
@@ -121,8 +115,7 @@ class _DashboardContent extends StatelessWidget {
         title: Builder(
           builder: (context) {
             final l10n = AppLocalizations.of(context);
-            return Text(
-                '${l10n?.hello ?? 'Hello'}, ${user.fullName.split(' ').first}');
+            return Text('${l10n?.hello ?? 'Hello'}, ${user.fullName.split(' ').first}');
           },
         ),
         actions: [
@@ -182,8 +175,7 @@ class _DashboardContent extends StatelessWidget {
                   const SizedBox(height: 8),
                   const BannerCarousel(),
                   const SizedBox(height: 16),
-                  if (snapshot.activeShopsCount > 0 ||
-                      snapshot.activeMembersCount > 0)
+                  if (snapshot.activeShopsCount > 0 || snapshot.activeMembersCount > 0)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: _ActiveUsersSummary(
@@ -220,21 +212,18 @@ class _DashboardContent extends StatelessWidget {
                   CategoryChips(
                     categories: snapshot.categories,
                     onCategoryTap: onCategoryTap,
-                    onViewAll: () =>
-                        context.push(CategoriesListScreen.routePath),
+                    onViewAll: () => context.push(CategoriesListScreen.routePath),
                   ),
                   const SizedBox(height: 24),
                   const SizedBox(height: 32),
                   // Contact Information Section
                   ContactInformationSection(user: user),
-                  const SizedBox(
-                      height: 100), // Extra space for floating button
+                  const SizedBox(height: 100), // Extra space for floating button
                 ],
               ),
             ),
             const SliverPadding(
-              padding: EdgeInsets.only(
-                  bottom: 90), // Extra padding for curved nav bar
+              padding: EdgeInsets.only(bottom: 90), // Extra padding for curved nav bar
             ),
           ],
         ),
@@ -501,8 +490,8 @@ class FloatingWhatsAppButton extends StatelessWidget {
         final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(l10n?.unableToOpenWhatsApp ??
-                'Unable to open WhatsApp. Please try again.'),
+            content:
+                Text(l10n?.unableToOpenWhatsApp ?? 'Unable to open WhatsApp. Please try again.'),
             backgroundColor: Colors.red,
             action: SnackBarAction(
               label: l10n?.retry ?? 'Retry',
@@ -559,8 +548,7 @@ class FloatingWhatsAppButton extends StatelessWidget {
           },
         ),
         elevation: 4,
-        tooltip: AppLocalizations.of(context)?.contactUsOnWhatsApp ??
-            'Contact us on WhatsApp',
+        tooltip: AppLocalizations.of(context)?.contactUsOnWhatsApp ?? 'Contact us on WhatsApp',
       ),
     );
   }
@@ -593,10 +581,7 @@ class _DashboardError extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               message,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: AppColors.textMuted),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textMuted),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),

@@ -58,9 +58,11 @@ class CategoryChips extends StatelessWidget {
               final category = categories[index];
               final cs = Theme.of(context).colorScheme;
 
-              return GestureDetector(
-                onTap: () => onCategoryTap(category),
-                child: Container(
+              return MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () => onCategoryTap(category),
+                  child: Container(
                   width: 150, // Fixed width for consistency
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -145,6 +147,7 @@ class CategoryChips extends StatelessWidget {
                       ),
                     ],
                   ),
+                ),
                 ),
               );
             },

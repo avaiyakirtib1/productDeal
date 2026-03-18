@@ -166,6 +166,15 @@ class _LanguageSelectionScreenState
                     ? null
                     : () => _handleLanguageChange(AppLanguage.russian),
               ),
+              _LanguageTile(
+                language: AppLanguage.ukrainian,
+                isSelected: currentLocale.languageCode == 'uk',
+                isLoading: _isChangingLanguage &&
+                    _changingLanguage == AppLanguage.ukrainian,
+                onTap: _isChangingLanguage
+                    ? null
+                    : () => _handleLanguageChange(AppLanguage.ukrainian),
+              ),
             ],
           ),
           if (_isChangingLanguage)
@@ -253,6 +262,8 @@ class _LanguageTile extends StatelessWidget {
         return 'हिन्दी';
       case AppLanguage.russian:
         return 'Русский';
+      case AppLanguage.ukrainian:
+        return 'Українська';
     }
   }
 }

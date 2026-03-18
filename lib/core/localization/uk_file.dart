@@ -1,0 +1,202 @@
+class UkrainianFile {
+  static const Map<String, String> ukrainianTranslations = {
+    // ============================================
+    // Options Screen Related
+    // ============================================
+    'options': 'Опції',
+    'account': 'Акаунт',
+    'myOrders': 'Мої замовлення',
+    'myOrdersSubtitle': 'Перегляд та відстеження ваших замовлень',
+    'statistics': 'Статистика',
+    'statisticsSubtitle': 'Перегляд статистики вашої участі в угодах',
+    'profile': 'Профіль',
+    'profileSubtitle': 'Керування вашим акаунтом',
+    'management': 'Керування',
+    'manageCategories': 'Керування категоріями',
+    'manageCategoriesSubtitle': 'Створення та керування категоріями продуктів',
+    'createNewProductSubtitle': 'Створити новий продукт',
+    'createNewDealSubtitle': 'Створити нову угоду',
+    'viewOrdersSubtitle': 'Перегляд та керування замовленнями',
+    'inactiveMembersViewSubtitle': 'Перегляд магазинів без недавніх замовлень',
+    'manageBannersSubtitle': 'Керування банерами програми (адмін)',
+    'myBannersSubtitle': 'Керування вашими банерами',
+    'unableToLoadOptions': 'Не вдалося завантажити опції',
+    'loggingOut': 'Вихід...',
+    'manageUsers': 'Керування користувачами',
+    'manageUsersSubtitle': 'Перегляд та керування акаунтами користувачів',
+    'analytics': 'Аналітика',
+    'analyticsSubtitle': 'Перегляд аналітики вашого бізнесу',
+    'information': 'Інформація',
+    'faq': 'FAQ',
+    'faqSubtitle': 'Часті запитання',
+    'aboutUs': 'Про нас',
+    'aboutUsSubtitle': 'Дізнатися більше про нашу платформу',
+    'helpSupport': 'Допомога та підтримка',
+    'helpSupportSubtitle': 'Отримати допомогу та зв’язатися з підтримкою',
+    'accountActions': 'Дії з акаунтом',
+    'deleteAccount': 'Видалити акаунт',
+    'deleteAccountSubtitle': 'Запит на постійне видалення вашого акаунта',
+    'logout': 'Вийти',
+    'logoutSubtitle': 'Вийти з вашого акаунта',
+    'confirmLogout': 'Підтвердити вихід',
+    'confirmLogoutMessage': 'Ви впевнені, що хочете вийти?',
+    'cancel': 'Скасувати',
+    'loginAgain': 'Увійти знову',
+
+    // ============================================
+    // Language Related
+    // ============================================
+    'language': 'Мова',
+    'languageSubtitle': 'Змінити мову програми',
+    'notificationSettings': 'Налаштування сповіщень',
+    'notificationSettingsSubtitle':
+        'Виберіть, які сповіщення ви хочете отримувати.',
+    'notificationChannels': 'Канали',
+    'pushNotifications': 'Push-сповіщення',
+    'pushNotificationsSubtitle': 'Отримувати push-сповіщення на вашому пристрої',
+    'emailNotifications': 'Email-сповіщення',
+    'emailNotificationsSubtitle': 'Отримувати сповіщення електронною поштою',
+    'notificationModules': 'За категорією',
+    'notificationSettingsSaved': 'Налаштування сповіщень збережено',
+    'notificationModuleProducts': 'Продукти',
+    'notificationModuleProductOrders': 'Замовлення продуктів',
+    'notificationModuleDeals': 'Угоди',
+    'notificationModuleDealOrders': 'Замовлення угод',
+    'notificationModuleBanners': 'Банери',
+    'notificationModuleAdmin': 'Адмін',
+    'notificationModuleEngagement': 'Взаємодія',
+    'notificationModulePayment': 'Оплата',
+    'push': 'Push',
+    'currency': 'Валюта',
+    'currencySubtitle': 'Валюта для відображення цін (типово: пристрій)',
+    'systemDefault': 'Системне значення за замовчуванням',
+    'syncFxRates': 'Синхронізувати курси валют',
+    'syncFxRatesSubtitle': 'Отримати останні курси валют від ЄЦБ',
+    'syncFxRatesSuccess': 'Курси валют успішно оновлено',
+    'syncFxRatesFailed':
+        'Не вдалося оновити курси валют. Використовуються кешовані курси.',
+    'changingLanguage': 'Зміна мови...',
+    'languageChangeFailed': 'Не вдалося синхронізувати вибір мови. Спробуйте ще раз.',
+    'failedToChangeLanguage': 'Не вдалося змінити мову. Спробуйте ще раз.',
+    'english': 'Англійська',
+    'german': 'Німецька',
+    'turkish': 'Турецька',
+    'arabic': 'Арабська',
+    'urdu': 'Урду',
+    'hindi': 'Гінді',
+    'russian': 'Російська',
+    'ukrainian': 'Українська',
+    'sourceLanguageLabel': 'Мова вмісту',
+    'sourceLanguageHint':
+        'Мова тексту, який ви вводите (він буде перекладений на інші мови)',
+
+    // ============================================
+    // Common / General
+    // ============================================
+    'sessionExpired': 'Сесія закінчилася',
+    'sessionExpiredMessage':
+        'Ваша сесія закінчилася. Будь ласка, увійдіть знову, щоб продовжувати користуватися програмою.',
+    'comingSoon': 'Скоро з’явиться',
+    'retry': 'Повторити',
+    'error': 'Помилка',
+    'errorWithDetail': 'Помилка: {detail}',
+    'close': 'Закрити',
+    'save': 'Зберегти',
+    'done': 'Готово',
+    'saving': 'Збереження...',
+    'update': 'Оновити',
+    'edit': 'Редагувати',
+    'delete': 'Видалити',
+    'add': 'Додати',
+    'remove': 'Вилучити',
+    'select': 'Вибрати',
+    'all': 'Всі',
+    'filter': 'Фільтр',
+    'type': 'Тип',
+    'status': 'Статус',
+    'unknown': 'Невідомо',
+
+    // ============================================
+    // Dashboard Related
+    // ============================================
+    'dashboard': 'Панель керування',
+    'nearbyWholesalers': 'Оптові постачальники поблизу',
+    'allWholesalers': 'Всі оптовики',
+    'noWholesalersFound': 'Оптовиків не знайдено',
+    'errorLoadingWholesalers': 'Помилка завантаження оптовиків',
+    'advertiseWithUs': 'Рекламуйтеся у нас',
+    'boostYourSales': 'Збільште свої продажі!',
+    'promoteYourProducts': 'Просувайте свої продукти тут і охоплюйте більше клієнтів.',
+    'unableToLoadDashboard': 'Не вдалося завантажити панель керування',
+    'unableToLoadProduct': 'Не вдалося завантажити продукт',
+    'unableToLoadWholesaler': 'Не вдалося завантажити оптовика',
+    'spotlight': 'У центрі уваги',
+
+    // ============================================
+    // Orders Related
+    // ============================================
+    'orderId': 'ID замовлення',
+    'payment': 'Оплата',
+    'paymentStatus': 'Статус оплати',
+    'placedOn': 'Розміщено',
+    'orderItems': 'Товари у замовленні',
+    'createShipment': 'Створити відправлення',
+    'shippingAddress': 'Адреса доставки',
+    'notes': 'Примітки',
+    'orderNotes': 'Примітки до замовлення',
+    'orderDetails': 'Деталі замовлення',
+    'subtotal': 'Сума',
+    'shipping': 'Доставка',
+    'total': 'Всього',
+    'shipped': 'Відправлено',
+    'delivered': 'Доставлено',
+    'pendingOrders': 'Очікувані замовлення',
+    'viewOrders': 'Переглянути замовлення',
+    'allOrders': 'Всі замовлення',
+
+    // ============================================
+    // Cart Related
+    // ============================================
+    'yourCart': 'Ваш кошик',
+    'cart': 'Кошик',
+    'emptyCart': 'Ваш кошик порожній',
+    'emptyCartMessage': 'Додайте продукти до кошика, щоб почати.',
+    'placeOrder': 'Розмістити замовлення',
+    'addToCart': 'Додати в кошик',
+    'addedToCart': '✅ Додано в кошик',
+    'quantity': 'Кількість',
+    'unitPrice': 'Ціна за одиницю',
+    'totalAmount': 'Загальна сума',
+
+    // ============================================
+    // Registration / Login Related
+    // ============================================
+    'register': 'Реєстрація',
+    'createAccount': 'Створити акаунт',
+    'login': 'Увійти',
+    'signIn': 'Увійти в акаунт',
+    'fullName': 'Повне ім’я',
+    'email': 'Email',
+    'phone': 'Телефон',
+    'password': 'Пароль',
+    'confirmPassword': 'Підтвердити пароль',
+    'businessName': 'Назва бізнесу',
+    'country': 'Країна',
+    'city': 'Місто',
+    'address': 'Адреса',
+    'alreadHaveAccount': 'Вже маєте акаунт?',
+    'forgotPassword': 'Забули пароль?',
+    'welcomeBack': 'З поверненням',
+
+    // ============================================
+    // Products and Deals
+    // ============================================
+    'product': 'Продукт',
+    'products': 'Продукти',
+    'deals': 'Угоди',
+    'activeDeals': 'Активні угоди',
+    'myDeals': 'Мої угоди',
+    'inStock': 'в наявності',
+    'outOfStock': 'НЕМАЄ В НАЯВНОСТІ',
+  };
+}
