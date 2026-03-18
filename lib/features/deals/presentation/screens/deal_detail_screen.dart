@@ -316,11 +316,12 @@ class _DealDetailContent extends ConsumerWidget {
                       const SizedBox(height: 16),
                     ],
 
-                    // Wholesaler Info
-                    if (deal.wholesaler != null) ...[
-                      _buildWholesalerCard(context, deal, theme),
-                      const SizedBox(height: 24),
-                    ],
+                    //
+                    // // Wholesaler Info
+                    // if (deal.wholesaler != null) ...[
+                    //   _buildWholesalerCard(context, deal, theme),
+                    //   const SizedBox(height: 24),
+                    // ],
 
                     // Order Form (only for kiosk users)
                     if (deal.isActive && !deal.isEnded && canPlaceOrder)

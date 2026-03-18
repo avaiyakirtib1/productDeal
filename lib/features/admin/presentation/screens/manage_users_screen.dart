@@ -404,8 +404,11 @@ class _ManageUsersScreenState extends ConsumerState<ManageUsersScreen> {
                                         ),
                                       ],
                                     ),
-                                    onTap: () =>
-                                        _showUserDetails(context, user),
+                                    onTap: () {
+                                      //_showUserDetails(context, user);
+                                      _showEditUserModal(
+                                          context, ref, user);
+                                    },
                                   ),
                                 );
                               },
