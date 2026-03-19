@@ -163,7 +163,14 @@ class ManagerDealsScreen extends ConsumerWidget {
                     return Card(
                       margin: const EdgeInsets.only(bottom: 12),
                       child: InkWell(
-                        onTap: () => context.push('/deals/${deal.id}'),
+                        onTap: () async {
+                          await context.push('/deals/${deal.id}');
+                          if (context.mounted) {
+                            ref
+                                .read(managerDealsProvider.notifier)
+                                .loadDeals(refresh: true);
+                          }
+                        },
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(

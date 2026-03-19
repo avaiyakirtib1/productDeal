@@ -1216,12 +1216,12 @@ class _BannerPreviewDialogState extends ConsumerState<_BannerPreviewDialog> {
                 ButtonSegment<PreviewDevice>(
                   value: PreviewDevice.mobile,
                   icon: const Icon(Icons.smartphone),
-                  label: Text(l10n!.platformMobile),
+                  label: Text(l10n.platformMobile),
                 ),
                 ButtonSegment<PreviewDevice>(
                   value: PreviewDevice.web,
                   icon: const Icon(Icons.web),
-                  label: Text(l10n!.platformWeb),
+                  label: Text(l10n.platformWeb),
                 ),
               ],
               selected: {device},
@@ -1240,6 +1240,7 @@ class _BannerPreviewDialogState extends ConsumerState<_BannerPreviewDialog> {
                   maxWidth: isMobile ? 375 : 1000,
                 ),
                 child: _BannerPreviewContent(
+                  isMobilePreview: isMobile,
                   title: widget.title,
                   description: widget.description,
                   imageUrl: imageUrl,
@@ -1264,98 +1265,101 @@ class _BannerPreviewDialogState extends ConsumerState<_BannerPreviewDialog> {
 /// gradient overlay, title/description styling, and 16:9 image area.
 class _BannerPreviewContent extends StatelessWidget {
   const _BannerPreviewContent({
+    required this.isMobilePreview,
     required this.title,
     required this.description,
     this.imageUrl,
     this.imageData,
   });
 
+  final bool isMobilePreview;
   final String title;
   final String description;
   final String? imageUrl;
   final PickedFileData? imageData;
 
-  static const double _bannerHeight = 260.0;
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Container(
-      height: _bannerHeight,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Image (16:9 effective area with BoxFit.cover; no square crop)
-          Positioned.fill(
-            child: _PreviewBannerImage(
-              imageUrl: imageUrl,
-              imageData: imageData,
-              placeholderBuilder: () => _imagePlaceholder(context, l10n),
+    final aspectRatio = isMobilePreview ? 1.0 : (16 / 9);
+
+    return AspectRatio(
+      aspectRatio: aspectRatio,
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.2),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
             ),
-          ),
-          // Gradient overlay (same as banner_carousel)
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.0),
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Colors.black.withValues(alpha: 0.7),
-                  Colors.black.withValues(alpha: 0.4),
-                  Colors.transparent,
-                ],
+          ],
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Positioned.fill(
+              child: _PreviewBannerImage(
+                imageUrl: imageUrl,
+                imageData: imageData,
+                placeholderBuilder: () => _imagePlaceholder(context, l10n),
               ),
             ),
-          ),
-          // Title and description (same styles as banner_carousel)
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title.isEmpty ? l10n.enterBannerTitle : title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (description.isNotEmpty) ...[
-                    const SizedBox(height: 4),
+            // Gradient overlay (same as banner_carousel)
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.0),
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.7),
+                    Colors.black.withValues(alpha: 0.4),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+            // Title and description (same styles as banner_carousel)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      description,
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.9),
-                        fontSize: 13.0,
+                      title.isEmpty ? l10n.enterBannerTitle : title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
                       ),
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    if (description.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        description,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.9),
+                          fontSize: 13.0,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
