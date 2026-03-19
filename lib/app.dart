@@ -9,7 +9,6 @@ import 'core/constants/app_languages.dart';
 import 'core/widgets/app_lifecycle_handler.dart';
 import 'core/localization/app_localizations.dart';
 import 'core/localization/language_controller.dart';
-import 'core/services/fcm_service.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/controllers/auth_controller.dart';
 import 'features/auth/presentation/screens/login_screen.dart';

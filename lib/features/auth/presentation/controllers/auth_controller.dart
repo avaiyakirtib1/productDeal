@@ -36,15 +36,9 @@ class AuthController extends AsyncNotifier<AuthSession?> {
     final result = await AsyncValue.guard(() async {
       final session = await _repository.login(payload);
       await _storage.persistSession(session);
-
-      // Initialize FCM after successful login
-      try {
-        final fcmService = ref.read(fcmServiceProvider);
-        await fcmService.initialize();
-      } catch (e) {
-        debugPrint('Error initializing FCM after login: $e');
-      }
-
+      // FCM is started from [fcmInitializedProvider] when the shell sees a logged-in
+      // user (see app.dart). Avoid awaiting notification permission here — on iOS that
+      // blocked auth completion and made login appear broken.
       return session;
     });
     state = result;
@@ -165,3 +159,12 @@ class AuthController extends AsyncNotifier<AuthSession?> {
 final authControllerProvider =
     AsyncNotifierProvider<AuthController, AuthSession?>(() => AuthController(),
         name: 'AuthControllerProvider');
+
+/// Starts FCM when a session exists; [autoDispose] so each login re-runs token registration.
+final fcmInitializedProvider = FutureProvider.autoDispose<void>((ref) async {
+  final session = ref.watch(authControllerProvider).valueOrNull;
+  if (session == null) return;
+
+  final fcmService = ref.watch(fcmServiceProvider);
+  await fcmService.initialize();
+}, name: 'FCMInitializedProvider');

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/services/fcm_service.dart';
+import '../../auth/presentation/controllers/auth_controller.dart';
 import '../../manager/presentation/screens/manager_dashboard_screen.dart';
 import 'deal_providers.dart';
 import 'repositories/deal_repository.dart';

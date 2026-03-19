@@ -105,7 +105,10 @@ class FCMService {
   final Dio _dio;
   final SharedPreferences _prefs;
   StreamSubscription<String>? _tokenSubscription;
+  StreamSubscription<RemoteMessage>? _onMessageSubscription;
+  StreamSubscription<RemoteMessage>? _onOpenedAppSubscription;
   NotificationDataHandler? _notificationDataHandler;
+  bool _localNotificationsPluginInitialized = false;
 
   FCMService(this._dio, this._prefs);
 
@@ -141,12 +144,13 @@ class FCMService {
       );
     }
 
-    // iOS initialization settings
+    // iOS: do not request permissions here — FirebaseMessaging.requestPermission()
+    // already triggers the system dialog. Duplicate requests confused users on login.
     const DarwinInitializationSettings iosSettings =
         DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
     );
 
     const InitializationSettings initSettings = InitializationSettings(
@@ -154,13 +158,16 @@ class FCMService {
       iOS: iosSettings,
     );
 
-    await flutterLocalNotificationsPlugin.initialize(
-      initSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) {
-        debugPrint('Local notification tapped: ${response.payload}');
-        // Handle notification tap - can navigate to specific screen
-      },
-    );
+    if (!_localNotificationsPluginInitialized) {
+      await flutterLocalNotificationsPlugin.initialize(
+        initSettings,
+        onDidReceiveNotificationResponse: (NotificationResponse response) {
+          debugPrint('Local notification tapped: ${response.payload}');
+          // Handle notification tap - can navigate to specific screen
+        },
+      );
+      _localNotificationsPluginInitialized = true;
+    }
 
     // Create Android notification channel (required for Android 8.0+)
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -189,8 +196,11 @@ class FCMService {
         return;
       }
 
-      // Request permission for notifications
-      final settings = await _requestPermission();
+      // Only show the iOS/Android permission prompt when status is still undecided.
+      var settings = await _messaging.getNotificationSettings();
+      if (settings.authorizationStatus == AuthorizationStatus.notDetermined) {
+        settings = await _requestPermission();
+      }
       debugPrint('FCM Permission status: ${settings.authorizationStatus}');
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized ||
@@ -198,27 +208,25 @@ class FCMService {
         // Initialize local notifications for foreground messages
         await _initializeLocalNotifications();
 
-        // Set up background message handler (must be called before other handlers)
-        FirebaseMessaging.onBackgroundMessage(
-            firebaseMessagingBackgroundHandler);
+        // Background handler is registered once in main.dart (Firebase requirement).
 
-        // Handle foreground messages (when app is open)
-        FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
+        // Replace any previous subscriptions (e.g. re-login after logout).
+        await _onMessageSubscription?.cancel();
+        await _onOpenedAppSubscription?.cancel();
+        await _tokenSubscription?.cancel();
 
-        // Handle notification taps (when app is in background/terminated)
-        FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationTap);
+        _onMessageSubscription =
+            FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
+        _onOpenedAppSubscription = FirebaseMessaging.onMessageOpenedApp
+            .listen(_handleNotificationTap);
 
-        // Check if app was opened from a notification (when app was terminated)
         final initialMessage = await _messaging.getInitialMessage();
         if (initialMessage != null) {
           _handleNotificationTap(initialMessage);
         }
 
-        // Get and register FCM token
-        // On iOS, this will ensure APNs token is available first
         await _registerToken();
 
-        // Listen for token refresh (works on Android, iOS, and Web)
         _tokenSubscription = _messaging.onTokenRefresh.listen((newToken) {
           debugPrint('🔄 FCM Token refreshed: $newToken');
           _registerTokenWithBackend(newToken);
@@ -468,6 +476,8 @@ class FCMService {
   /// Dispose resources
   void dispose() {
     _tokenSubscription?.cancel();
+    _onMessageSubscription?.cancel();
+    _onOpenedAppSubscription?.cancel();
   }
 }
 
@@ -492,9 +502,3 @@ List<String> _parseArgs(dynamic raw) {
   }
   return const [];
 }
-
-/// Provider for FCM initialization
-final fcmInitializedProvider = FutureProvider<void>((ref) async {
-  final fcmService = ref.watch(fcmServiceProvider);
-  await fcmService.initialize();
-}, name: 'FCMInitializedProvider');
