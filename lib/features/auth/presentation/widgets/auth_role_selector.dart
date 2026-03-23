@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/localization/app_localizations.dart';
 import '../../data/models/auth_models.dart';
 
 class AuthRoleSelector extends StatelessWidget {
@@ -15,9 +16,10 @@ class AuthRoleSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final options = {
-      UserRole.kiosk: ('Kiosk / Shop', Icons.storefront),
-      UserRole.wholesaler: ('Wholesaler', Icons.local_shipping_outlined),
+      UserRole.kiosk: (l10n?.kioskShopRole ?? 'Kiosk / Shop', Icons.storefront),
+      UserRole.wholesaler: (l10n?.wholesaler ?? 'Wholesaler', Icons.local_shipping_outlined),
     };
 
     final entries = options.entries.toList();

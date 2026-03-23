@@ -1328,5 +1328,6 @@ class RussianFile {
     'notificationBannerStatusChangedBody': 'Статус вашего баннера "{0}" изменён на {1}',
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
+    'kioskShopRole': 'Киоск / Магазин',
   };
 }

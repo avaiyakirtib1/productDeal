@@ -54,9 +54,8 @@ class _LanguageSelectionScreenState
           // Show error message if sync failed
           ScaffoldMessenger.of(ctx).showSnackBar(
             SnackBar(
-              content: Text(
-                  AppLocalizations.of(ctx)?.languageChangeFailed ??
-                      'Failed to sync language preference. Please try again.'),
+              content: Text(AppLocalizations.of(ctx)?.languageChangeFailed ??
+                  'Failed to sync language preference. Please try again.'),
               backgroundColor: Theme.of(ctx).colorScheme.error,
             ),
           );
@@ -70,11 +69,15 @@ class _LanguageSelectionScreenState
           _isChangingLanguage = false;
           _changingLanguage = null;
         });
-        ScaffoldMessenger.of(ctx).showSnackBar( // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          // ignore: use_build_context_synchronously
           SnackBar(
-            content: Text(AppLocalizations.of(ctx)?.failedToChangeLanguage ?? // ignore: use_build_context_synchronously
+            content: Text(AppLocalizations.of(ctx)
+                    ?.failedToChangeLanguage ?? // ignore: use_build_context_synchronously
                 'Failed to change language. Please try again.'),
-            backgroundColor: Theme.of(ctx).colorScheme.error, // ignore: use_build_context_synchronously
+            backgroundColor: Theme.of(ctx)
+                .colorScheme
+                .error, // ignore: use_build_context_synchronously
           ),
         );
       }

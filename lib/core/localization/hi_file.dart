@@ -1328,5 +1328,6 @@ class HindiFile {
     'notificationBannerStatusChangedBody': 'आपके बैनर "{0}" की स्थिति {1} में बदल गई',
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
+    'kioskShopRole': 'कियोस्क / दुकान',
   };
 }

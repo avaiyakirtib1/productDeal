@@ -1326,5 +1326,6 @@ class ArabicFile {
     'notificationBannerStatusChangedBody': 'تم تغيير حالة بانرك "{0}" إلى {1}',
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
+    'kioskShopRole': 'كشك / متجر',
   };
 }

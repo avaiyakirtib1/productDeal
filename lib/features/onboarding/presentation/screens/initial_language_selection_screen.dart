@@ -24,8 +24,7 @@ class InitialLanguageSelectionScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final currentLocale = ref.watch(languageControllerProvider);
     final languageController = ref.read(languageControllerProvider.notifier);
-    final hasSelectedNotifier =
-        ref.read(hasSelectedLanguageProvider.notifier);
+    final hasSelectedNotifier = ref.read(hasSelectedLanguageProvider.notifier);
 
     return Scaffold(
       body: SafeArea(
@@ -69,8 +68,7 @@ class InitialLanguageSelectionScreen extends ConsumerWidget {
                 itemCount: AppLanguages.supportedCodes.length,
                 itemBuilder: (context, index) {
                   final code = AppLanguages.supportedCodes[index];
-                  final name =
-                      AppLanguages.contentLanguageNames[code] ?? code;
+                  final name = AppLanguages.contentLanguageNames[code] ?? code;
                   final isSelected = currentLocale.languageCode == code;
                   final language = AppLanguage.fromCode(code);
                   return _OnboardingLanguageTile(

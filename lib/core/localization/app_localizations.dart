@@ -373,6 +373,7 @@ class AppLocalizations {
   String get phoneNumberOptional => translate('phoneNumberOptional');
   String get enterValidPhoneNumber => translate('enterValidPhoneNumber');
   String get kioskShopNameOptional => translate('kioskShopNameOptional');
+  String get kioskShopRole => translate('kioskShopRole');
   String get companyName => translate('companyName');
   String get streetAddress => translate('streetAddress');
   String get addressWillBeGeocoded => translate('addressWillBeGeocoded');

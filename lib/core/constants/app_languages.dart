@@ -40,7 +40,8 @@ class AppLanguages {
   };
 
   /// Locales for MaterialApp.supportedLocales.
-  static List<Locale> get supportedLocales => supportedCodes.map((c) => Locale(c)).toList();
+  static List<Locale> get supportedLocales =>
+      supportedCodes.map((c) => Locale(c)).toList();
 
   /// Content source languages for Create Product, Deal, Banner, Category.
   /// Same as [supportedCodes] - user selects the language they enter content in.
@@ -49,7 +50,8 @@ class AppLanguages {
   /// Display names for content source language (alias for [displayNames]).
   static const Map<String, String> contentLanguageNames = displayNames;
 
-  static bool isSupported(String languageCode) => supportedCodes.contains(languageCode);
+  static bool isSupported(String languageCode) =>
+      supportedCodes.contains(languageCode);
 }
 
 /// App language enum for language selection screen.

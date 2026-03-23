@@ -1340,5 +1340,6 @@ class UkrainianFile {
     'notificationBannerStatusChangedBody': 'Статус вашого банера "{0}" змінено на {1}',
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
+    'kioskShopRole': 'Кіоск / Магазин',
   };
 }

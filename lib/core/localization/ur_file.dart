@@ -1328,5 +1328,6 @@ class UrduFile {
     'notificationBannerStatusChangedBody': 'آپ کے بینر "{0}" کی صورتحال {1} میں بدل گئی',
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
+    'kioskShopRole': 'کھوکھا / دکان',
   };
 }

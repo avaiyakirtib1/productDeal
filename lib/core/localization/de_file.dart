@@ -1387,5 +1387,6 @@ class GermanFile {
         'Der Status Ihres Banners "{0}" wurde zu {1} geändert',
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
+    'kioskShopRole': 'Kiosk / Shop',
   };
 }

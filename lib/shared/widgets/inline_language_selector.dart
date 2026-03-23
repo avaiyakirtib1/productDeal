@@ -37,8 +37,7 @@ class InlineLanguageSelector extends StatelessWidget {
           for (var i = 0; i < availableLanguages.length; i++) ...[
             if (i > 0) SizedBox(width: gap),
             _LanguageCard(
-              label: AppLanguages.contentLanguageNames[
-                      availableLanguages[i]] ??
+              label: AppLanguages.contentLanguageNames[availableLanguages[i]] ??
                   availableLanguages[i],
               flag: AppLanguage.fromCode(availableLanguages[i]).flag,
               selected: availableLanguages[i] == currentValue,
@@ -76,13 +75,11 @@ class _LanguageCard extends StatelessWidget {
     final muted = theme.colorScheme.onSurfaceVariant;
     final borderColor =
         selected ? primaryColor : theme.colorScheme.outlineVariant;
-    final bgColor = selected
-        ? primaryColor.withValues(alpha: 0.1)
-        : Colors.transparent;
+    final bgColor =
+        selected ? primaryColor.withValues(alpha: 0.1) : Colors.transparent;
 
-    final baseText = isMobile
-        ? theme.textTheme.bodyMedium
-        : theme.textTheme.titleSmall;
+    final baseText =
+        isMobile ? theme.textTheme.bodyMedium : theme.textTheme.titleSmall;
     final textStyle = baseText?.copyWith(
       color: selected ? theme.colorScheme.onSurface : muted,
       fontWeight: selected ? FontWeight.w700 : FontWeight.w500,

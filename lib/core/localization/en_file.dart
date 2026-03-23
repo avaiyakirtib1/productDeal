@@ -1548,5 +1548,6 @@ class EnglishFile {
         'Your banner "{0}" status changed to {1}',
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
+    'kioskShopRole': 'Kiosk / Shop',
   };
 }

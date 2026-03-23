@@ -1329,5 +1329,6 @@ class TurkishFile {
     'notificationBannerStatusChangedBody': '"{0}" bannerınızın durumu {1} olarak değişti',
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
+    'kioskShopRole': 'Büfe / Dükkan',
   };
 }
