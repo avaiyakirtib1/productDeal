@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/legal_document_content.dart';
+import '../../data/legal_document_translations.dart';
 
 /// Full-screen scrollable viewer for legal document text.
 /// Uses [SelectableText] for accessibility and copy.
@@ -16,6 +16,7 @@ class LegalDocumentViewer extends StatelessWidget {
 
   /// Predefined viewers for the three main documents + Rahmenvertrag
   static void showAgb(BuildContext context) {
+    final lang = Localizations.localeOf(context).languageCode;
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -29,8 +30,8 @@ class LegalDocumentViewer extends StatelessWidget {
         maxChildSize: 1,
         expand: false,
         builder: (_, scrollController) => _LegalDocumentScaffold(
-          title: 'Allgemeine Geschäftsbedingungen (AGB)',
-          body: legalDocumentAgb,
+          title: getLocalizedLegalTitle('agb', lang),
+          body: getLocalizedLegalDocument('agb', lang),
           scrollController: scrollController,
         ),
       ),
@@ -38,6 +39,7 @@ class LegalDocumentViewer extends StatelessWidget {
   }
 
   static void showCompliance(BuildContext context) {
+    final lang = Localizations.localeOf(context).languageCode;
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -51,8 +53,8 @@ class LegalDocumentViewer extends StatelessWidget {
         maxChildSize: 1,
         expand: false,
         builder: (_, scrollController) => _LegalDocumentScaffold(
-          title: 'Compliance-Richtlinie (Markenrecht & Produktintegrität)',
-          body: legalDocumentCompliance,
+          title: getLocalizedLegalTitle('compliance', lang),
+          body: getLocalizedLegalDocument('compliance', lang),
           scrollController: scrollController,
         ),
       ),
@@ -60,6 +62,7 @@ class LegalDocumentViewer extends StatelessWidget {
   }
 
   static void showPrivacy(BuildContext context) {
+    final lang = Localizations.localeOf(context).languageCode;
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -73,8 +76,8 @@ class LegalDocumentViewer extends StatelessWidget {
         maxChildSize: 1,
         expand: false,
         builder: (_, scrollController) => _LegalDocumentScaffold(
-          title: 'Datenschutzerklärung und Datenübermittlung',
-          body: legalDocumentPrivacy,
+          title: getLocalizedLegalTitle('privacy', lang),
+          body: getLocalizedLegalDocument('privacy', lang),
           scrollController: scrollController,
         ),
       ),
@@ -82,6 +85,7 @@ class LegalDocumentViewer extends StatelessWidget {
   }
 
   static void showRahmenvertrag(BuildContext context) {
+    final lang = Localizations.localeOf(context).languageCode;
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -95,8 +99,8 @@ class LegalDocumentViewer extends StatelessWidget {
         maxChildSize: 1,
         expand: false,
         builder: (_, scrollController) => _LegalDocumentScaffold(
-          title: 'Rahmenvertrag zur Nutzung der App',
-          body: legalDocumentRahmenvertrag,
+          title: getLocalizedLegalTitle('rahmenvertrag', lang),
+          body: getLocalizedLegalDocument('rahmenvertrag', lang),
           scrollController: scrollController,
         ),
       ),
