@@ -61,8 +61,7 @@ final dioProvider = Provider<Dio>((ref) {
     },
     onResponse: (response, handler) {
       // Calculate and log request duration
-      final startTime =
-          response.requestOptions.extra['requestStartTime'] as int?;
+      final startTime = response.requestOptions.extra['requestStartTime'] as int?;
       if (startTime != null) {
         final duration = DateTime.now().millisecondsSinceEpoch - startTime;
         final durationSeconds = (duration / 1000).toStringAsFixed(2);
@@ -74,8 +73,7 @@ final dioProvider = Provider<Dio>((ref) {
         // Build query string for logging
         String queryString = '';
         if (queryParams.isNotEmpty) {
-          final queryList =
-              queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
+          final queryList = queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
           queryString = '?$queryList';
         }
 
@@ -116,9 +114,7 @@ final dioProvider = Provider<Dio>((ref) {
         );
         if (ApiTimingCollector.isEnabled) {
           final q = error.requestOptions.queryParameters;
-          final qs = q.isEmpty
-              ? ''
-              : '?${q.entries.map((e) => '${e.key}=${e.value}').join('&')}';
+          final qs = q.isEmpty ? '' : '?${q.entries.map((e) => '${e.key}=${e.value}').join('&')}';
           final msg = error.response?.data is Map<String, dynamic>
               ? (error.response?.data['message'] as String?)
               : error.response?.data?.toString();
@@ -164,8 +160,7 @@ final dioProvider = Provider<Dio>((ref) {
   return dio;
 }, name: 'DioProvider');
 
-Future<Response<dynamic>> _retryRequest(
-    Dio dio, RequestOptions requestOptions) {
+Future<Response<dynamic>> _retryRequest(Dio dio, RequestOptions requestOptions) {
   final options = Options(
     method: requestOptions.method,
     headers: requestOptions.headers,
@@ -190,7 +185,7 @@ ApiException mapDioException(DioException error) {
   String? message;
 
   if (data is Map<String, dynamic>) {
-    message = data['message'] as String?;
+    message = (data['message'] as String?) ?? (data['debugMessage'] as String?);
   } else if (data is String) {
     message = data;
   }

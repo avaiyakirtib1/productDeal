@@ -71,12 +71,19 @@ class AuthController extends AsyncNotifier<AuthSession?> {
   }
 
   Future<void> register(RegisterPayload payload) async {
-    await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       final session = await _repository.register(payload);
       // Registration still needs approval; tokens are stored for convenience.
       await _storage.persistSession(session);
-      state = AsyncValue.data(session);
+      return session;
     });
+    
+    if (result is AsyncData) {
+      state = AsyncValue.data(result.value);
+    }
+
+    // Rethrow so RegisterFormController's AsyncValue.guard sees the error and shows error UI/snackbar
+    result.whenOrNull(error: (err, _) => throw err);
   }
 
   Future<bool> refreshTokens() async {

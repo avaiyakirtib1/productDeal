@@ -13,43 +13,38 @@ class AuthRepository {
 
   Future<AuthSession> login(LoginPayload payload) async {
     try {
-      final response = await _dio.post<Map<String, dynamic>>('/auth/login',
-          data: payload.toJson());
+      final response = await _dio.post<Map<String, dynamic>>('/auth/login', data: payload.toJson());
       final data = response.data ?? {};
       return AuthSession(
         user: UserModel.fromJson(data['data'] as Map<String, dynamic>),
         tokens: AuthTokens.fromJson(data['tokens'] as Map<String, dynamic>),
       );
     } on DioException catch (error) {
-      throw ApiException(_resolveMessage(error),
-          statusCode: error.response?.statusCode);
+      throw ApiException(_resolveMessage(error), statusCode: error.response?.statusCode);
     }
   }
 
   Future<AuthSession> register(RegisterPayload payload) async {
     try {
-      final response = await _dio.post<Map<String, dynamic>>('/auth/register',
-          data: payload.toJson());
+      final response =
+          await _dio.post<Map<String, dynamic>>('/auth/register', data: payload.toJson());
       final data = response.data ?? {};
       return AuthSession(
         user: UserModel.fromJson(data['data'] as Map<String, dynamic>),
         tokens: AuthTokens.fromJson(data['tokens'] as Map<String, dynamic>),
       );
     } on DioException catch (error) {
-      throw ApiException(_resolveMessage(error),
-          statusCode: error.response?.statusCode);
+      throw ApiException(_resolveMessage(error), statusCode: error.response?.statusCode);
     }
   }
 
   Future<AuthTokens> refresh(String refreshToken) async {
     try {
-      final response = await _dio.post<Map<String, dynamic>>('/auth/refresh',
-          data: {'refreshToken': refreshToken});
-      return AuthTokens.fromJson(
-          response.data?['tokens'] as Map<String, dynamic>);
+      final response = await _dio
+          .post<Map<String, dynamic>>('/auth/refresh', data: {'refreshToken': refreshToken});
+      return AuthTokens.fromJson(response.data?['tokens'] as Map<String, dynamic>);
     } on DioException catch (error) {
-      throw ApiException(_resolveMessage(error),
-          statusCode: error.response?.statusCode);
+      throw ApiException(_resolveMessage(error), statusCode: error.response?.statusCode);
     }
   }
 
@@ -72,8 +67,7 @@ class AuthRepository {
       final response = await _dio.get<Map<String, dynamic>>('/users/me');
       return UserModel.fromJson(response.data?['data'] as Map<String, dynamic>);
     } on DioException catch (error) {
-      throw ApiException(_resolveMessage(error),
-          statusCode: error.response?.statusCode);
+      throw ApiException(_resolveMessage(error), statusCode: error.response?.statusCode);
     }
   }
 
@@ -85,15 +79,14 @@ class AuthRepository {
       );
       return UserModel.fromJson(response.data?['data'] as Map<String, dynamic>);
     } on DioException catch (error) {
-      throw ApiException(_resolveMessage(error),
-          statusCode: error.response?.statusCode);
+      throw ApiException(_resolveMessage(error), statusCode: error.response?.statusCode);
     }
   }
 
   String _resolveMessage(DioException error) {
     final data = error.response?.data;
     if (data is Map<String, dynamic>) {
-      final message = data['message'] as String?;
+      final message = (data['message'] as String?) ?? (data['debugMessage'] as String?);
       if (message != null && message.isNotEmpty) return message;
       // Try to build message from validation details
       final details = data['details'];
