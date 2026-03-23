@@ -86,6 +86,10 @@ class RussianFile {
     'russian': 'Русский',
     'sourceLanguageLabel': 'Язык контента',
     'sourceLanguageHint': 'Язык вводимого текста (будет переведён на другие языки)',
+    'selectYourLanguage': 'Выберите язык',
+    'selectYourLanguageSubtitle':
+        'Выберите язык приложения. Его можно изменить позже в настройках.',
+    'continueButton': 'Продолжить',
     // ============================================
     // Common / General
     // ============================================
@@ -322,6 +326,17 @@ class RussianFile {
     'address': 'Адрес',
     'streetAddress': 'адрес улицы',
     'addressWillBeGeocoded': 'Адрес будет автоматически геокодирован для получения координат.',
+    'addressSearchHint': 'Найдите свой адрес',
+    'placesLookupFailed':
+        'Не удалось загрузить детали адреса с сервера. Вы можете ввести или '
+        'отредактировать адрес вручную.',
+    'placesNoAddressResults':
+        'Адреса не найдены. Попробуйте другой запрос.',
+    'placesAddressSearchConfigError':
+        'Поиск адреса недоступен. Проверьте сеть и что приложение указывает на '
+        'правильный API-сервер (API_BASE_URL).',
+    'placesAddressSearchRequestFailed':
+        'Ошибка поиска адреса. Проверьте подключение или повторите попытку позже.',
     'getLocation': 'Получить местоположение',
     'selectRole': 'Выберите роль',
     'accountType': 'Тип аккаунта',
@@ -330,6 +345,7 @@ class RussianFile {
     'signIn': 'Войти',
     'registrationReceived': 'Регистрация получена! Мы сообщим вам, как только аккаунт будет одобрен.',
     'fullNameRequired': 'Требуется полное имя',
+    'fullNameMinLength': 'Полное имя должно содержать не менее 3 символов',
     'emailRequired': 'Требуется электронная почта',
     'provideValidEmail': 'Укажите действительный адрес электронной почты',
     'phoneNumberOptional': 'Номер телефона (необязательно)',
@@ -881,6 +897,15 @@ class RussianFile {
     'deselect': 'Отменить выбор',
     'recipients': 'Получатели',
     'notificationSent': 'Notification sent',
+    'notifyDealParticipantsTitle': 'Уведомить участников сделки',
+    'notifyDealParticipantsAudienceWarning':
+        'Это сообщение будет отправлено только тем пользователям, которые разместили заказ по этой сделке.',
+    'notifyDealParticipantsSendUpdateTooltip': 'Отправить обновление',
+    'notifyDealParticipantsSending': 'Отправка...',
+    'notifyDealParticipantsNoParticipantsError':
+        'Невозможно отправить: к этой сделке пока не присоединился ни один пользователь.',
+    'notifyDealParticipantsFailedToSend':
+        'Не удалось отправить уведомление: {error}',
     'noInactiveMembers': 'No inactive members',
     'selectAll': 'Выбрать все',
     'sendNotification': 'Send notification',
@@ -1270,6 +1295,9 @@ class RussianFile {
     'notificationDealSuccessBody': 'Ваша групповая сделка "{0}" достигла нужного количества и теперь подтверждена. Подготовьтесь к оплате и доставке согласно инструкциям оптовика.',
     'notificationDealClosedTitle': 'Сделка закрыта',
     'notificationDealClosedBody': 'Сделка "{0}" была закрыта и больше не будет отображаться в активных сделках.',
+    'deal_closed_title': 'Сделка закрыта!',
+    'deal_closed_body':
+        'Сделка «{0}» официально закрыта. Спасибо за участие!',
     'notificationOrderStatusUpdatedTitle': 'Статус заказа обновлён',
     'notificationOrderConfirmedBody': 'Ваш заказ на "{0}" подтверждён!',
     'notificationOrderDispatchedBody': 'Ваш заказ на "{0}" отправлен!',

@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart' show compute;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,8 +15,11 @@ import '../../../manager/presentation/screens/select_product_screen.dart';
 import '../../../../core/constants/app_languages.dart';
 import '../../../../core/localization/app_localizations.dart';
 import '../../../../core/services/currency_service.dart';
-import '../../../../core/services/upload_service.dart';
+import '../../../../core/services/deal_image_preprocess.dart';
 import '../../../../core/services/image_picker_helper.dart';
+import '../../../../core/services/upload_io.dart'
+    if (dart.library.html) '../../../../core/services/upload_io_stub.dart';
+import '../../../../core/services/upload_service.dart';
 import '../../../../core/widgets/image_preview_widget.dart';
 import '../../data/payment_email_defaults.dart';
 import '../../../../shared/widgets/payment_mode_selector.dart';
@@ -373,7 +379,11 @@ class _CreateDealModalState extends ConsumerState<CreateDealModal> {
     try {
       setState(() => _uploadingImage = true);
       final uploadService = ref.read(uploadServiceProvider);
-      final imageData = await ImagePickerHelper.pickImage();
+      final imageData = await ImagePickerHelper.pickImage(
+        maxWidth: 1920,
+        maxHeight: 1920,
+        imageQuality: 85,
+      );
       if (imageData == null) {
         setState(() => _uploadingImage = false);
         return;
@@ -381,8 +391,24 @@ class _CreateDealModalState extends ConsumerState<CreateDealModal> {
 
       setState(() => _selectedImage = imageData);
 
+      final Uint8List rawBytes;
+      if (imageData.isWeb) {
+        rawBytes = Uint8List.fromList(imageData.bytes!);
+      } else {
+        rawBytes = await readUploadBytesFromIoFile(imageData.fileAsFile);
+      }
+
+      final processed = await compute(preprocessDealImageForUpload, rawBytes);
+      final baseName =
+          imageData.filename.replaceAll(RegExp(r'\.[^.]+$'), '');
+      final outName = '${baseName.isEmpty ? 'deal' : baseName}.jpg';
+      final uploadPayload = PickedFileData(
+        bytes: processed,
+        filename: outName,
+      );
+
       final url = await uploadService.uploadFile(
-        fileData: imageData,
+        fileData: uploadPayload,
         folder: 'deals',
       );
 
@@ -523,6 +549,7 @@ class _CreateDealModalState extends ConsumerState<CreateDealModal> {
   }
 
   Future<void> _handleSubmit() async {
+    if (_isLoading) return;
     if (!_formKey.currentState!.validate()) return;
 
     final l10n = AppLocalizations.of(context)!;
@@ -556,6 +583,8 @@ class _CreateDealModalState extends ConsumerState<CreateDealModal> {
       _isLoading = true;
       _error = null;
     });
+    // Let the frame paint loading/disabled submit before heavy work + network.
+    await Future<void>.delayed(Duration.zero);
 
     try {
       final images = _imageUrlController.text.trim().isNotEmpty
@@ -629,19 +658,8 @@ class _CreateDealModalState extends ConsumerState<CreateDealModal> {
         allowOnlinePayment: false, // Payment Mode (Cash/Bank Transfer/Invoice) only – no card
       );
 
-      try {
-        await widget.onSave(data);
-        // Only close modal on success
-        if (mounted) {
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.dealCreatedSuccessfully)),
-          );
-        }
-      } catch (saveError) {
-        // Re-throw to outer catch block
-        rethrow;
-      }
+      await widget.onSave(data);
+      // Caller (e.g. manager screen) closes the route and shows success.
     } catch (e, stackTrace) {
       // Keep modal open on error so user doesn't lose data
       debugPrint('CreateDeal error caught - keeping modal open: $e');

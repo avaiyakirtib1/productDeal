@@ -3,7 +3,7 @@ enum UserRole { admin, subAdmin, wholesaler, kiosk }
 enum UserStatus { pending, approved, rejected, suspended, needMoreInfo }
 
 UserRole roleFromString(String value) {
-  switch (value) {
+  switch (value.trim().toLowerCase()) {
     case 'admin':
       return UserRole.admin;
     case 'sub_admin':

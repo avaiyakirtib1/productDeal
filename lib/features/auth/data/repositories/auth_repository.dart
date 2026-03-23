@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/networking/api_client.dart';
@@ -49,6 +50,20 @@ class AuthRepository {
     } on DioException catch (error) {
       throw ApiException(_resolveMessage(error),
           statusCode: error.response?.statusCode);
+    }
+  }
+
+  /// Removes [fcmToken] from the user's device list on the server (multi-device push).
+  /// Best-effort: failures are ignored so local logout can finish.
+  Future<void> logout({String? fcmToken}) async {
+    try {
+      final body = <String, dynamic>{};
+      if (fcmToken != null && fcmToken.isNotEmpty) {
+        body['fcmToken'] = fcmToken;
+      }
+      await _dio.post<void>('/auth/logout', data: body);
+    } on DioException catch (error) {
+      debugPrint('AuthRepository.logout: ${error.message}');
     }
   }
 

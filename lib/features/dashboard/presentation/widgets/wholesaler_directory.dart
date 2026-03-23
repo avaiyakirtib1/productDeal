@@ -59,7 +59,6 @@ class _WholesalerDirectoryState extends ConsumerState<WholesalerDirectory> {
     final state = ref.watch(wholesalerDirectoryControllerProvider);
     final controller = ref.read(wholesalerDirectoryControllerProvider.notifier);
     final snapshot = state.valueOrNull;
-    final viewedIds = ref.watch(storyViewStateProvider);
     final storyViewNotifier = ref.read(storyViewStateProvider.notifier);
 
     return Column(
@@ -132,15 +131,14 @@ class _WholesalerDirectoryState extends ConsumerState<WholesalerDirectory> {
                   final wholesaler = data.items[index];
                   final hasStory = wholesaler.hasActiveStory &&
                       wholesaler.stories.isNotEmpty;
-                  final isViewed = viewedIds.contains(wholesaler.id);
-                  // Debug: Log ID matching
                   if (hasStory && kDebugMode) {
                     debugPrint(
-                        'Wholesaler ${wholesaler.businessName} (ID: ${wholesaler.id}) - Viewed: $isViewed');
+                      'Wholesaler ${wholesaler.businessName} '
+                      '(ID: ${wholesaler.id})',
+                    );
                   }
                   return _DirectoryAvatar(
                     wholesaler: wholesaler,
-                    isViewed: isViewed,
                     onStoryTap: hasStory
                         ? () {
                             storyViewNotifier.markViewed(wholesaler.id);
@@ -176,21 +174,24 @@ class _WholesalerDirectoryState extends ConsumerState<WholesalerDirectory> {
   }
 }
 
-class _DirectoryAvatar extends StatelessWidget {
+class _DirectoryAvatar extends ConsumerWidget {
   const _DirectoryAvatar({
     required this.wholesaler,
-    required this.isViewed,
     required this.onStoryTap,
     required this.onTap,
   });
 
   final SpotlightWholesaler wholesaler;
   final VoidCallback onTap;
-  final bool isViewed;
   final VoidCallback? onStoryTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isViewed = ref.watch(
+      storyViewStateProvider.select(
+        (ids) => ids.contains(wholesaler.id),
+      ),
+    );
     final theme = Theme.of(context);
 
     final distance =

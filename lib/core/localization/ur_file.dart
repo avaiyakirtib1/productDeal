@@ -86,6 +86,10 @@ class UrduFile {
     'russian': 'روسی',
     'sourceLanguageLabel': 'مواد کی زبان',
     'sourceLanguageHint': 'آپ کے داخل کردہ متن کی زبان (دوسری زبانوں میں ترجمہ کی جائے گی)',
+    'selectYourLanguage': 'اپنی زبان منتخب کریں',
+    'selectYourLanguageSubtitle':
+        'ایپ کے لیے زبان منتخب کریں۔ آپ بعد میں ترتیبات میں اسے بدل سکتے ہیں۔',
+    'continueButton': 'جاری رکھیں',
     // ============================================
     // Common / General
     // ============================================
@@ -322,6 +326,17 @@ class UrduFile {
     'address': 'پتہ',
     'streetAddress': 'گلی کا پتہ',
     'addressWillBeGeocoded': 'کوآرڈینیٹ حاصل کرنے کے لیے پتہ خود بخود جیو کوڈ ہو جائے گا۔',
+    'addressSearchHint': 'اپنا پتہ تلاش کریں',
+    'placesLookupFailed':
+        'سرور سے پتے کی تفصیلات لوڈ نہیں ہو سکیں۔ آپ اپنا پتہ دستی طور پر ٹائپ یا '
+        'ترمیم کر سکتے ہیں۔',
+    'placesNoAddressResults':
+        'کوئی پتہ نہیں ملا۔ کوئی اور تلاش آزمائیں۔',
+    'placesAddressSearchConfigError':
+        'پتے کی تلاش دستیاب نہیں۔ اپنا نیٹ ورک چیک کریں اور یقینی بنائیں کہ ایپ '
+        'صحیح API سرور (API_BASE_URL) استعمال کر رہی ہے۔',
+    'placesAddressSearchRequestFailed':
+        'پتے کی تلاش ناکام۔ اپنا کنکشن چیک کریں یا بعد میں دوبارہ کوشش کریں۔',
     'getLocation': 'مقام حاصل کریں۔',
     'selectRole': 'کردار منتخب کریں۔',
     'accountType': 'اکاؤنٹ کی قسم',
@@ -330,6 +345,7 @@ class UrduFile {
     'signIn': 'سائن ان کریں۔',
     'registrationReceived': 'رجسٹریشن موصول! اکاؤنٹ کی منظوری کے بعد ہم آپ کو مطلع کریں گے۔',
     'fullNameRequired': 'پورا نام درکار ہے۔',
+    'fullNameMinLength': 'مکمل نام کم از کم 3 حروف کا ہونا چاہیے',
     'emailRequired': 'ای میل درکار ہے۔',
     'provideValidEmail': 'ایک درست ای میل فراہم کریں۔',
     'phoneNumberOptional': 'فون نمبر (اختیاری)',
@@ -881,6 +897,15 @@ class UrduFile {
     'deselect': 'غیر منتخب کریں۔',
     'recipients': 'وصول کنندگان',
     'notificationSent': 'اطلاع بھیج دی گئی۔',
+    'notifyDealParticipantsTitle': 'ڈیل کے شرکاء کو اطلاع دیں',
+    'notifyDealParticipantsAudienceWarning':
+        'یہ پیغام صرف اُن صارفین کو بھیجا جائے گا جنہوں نے اس ڈیل کے لیے آرڈر کیا ہے۔',
+    'notifyDealParticipantsSendUpdateTooltip': 'اپ ڈیٹ بھیجیں',
+    'notifyDealParticipantsSending': 'بھیجا جا رہا ہے...',
+    'notifyDealParticipantsNoParticipantsError':
+        'بھیجنا ممکن نہیں: ابھی تک کوئی صارف اس ڈیل میں شامل نہیں ہوا۔',
+    'notifyDealParticipantsFailedToSend':
+        'اطلاع بھیجنے میں ناکامی: {error}',
     'noInactiveMembers': 'کوئی غیر فعال ممبر نہیں۔',
     'selectAll': 'سبھی کو منتخب کریں۔',
     'sendNotification': 'اطلاع بھیجیں۔',
@@ -1270,6 +1295,9 @@ class UrduFile {
     'notificationDealSuccessBody': 'آپ کی گروپ ڈیل "{0}" مطلوبہ مقدار تک پہنچ گئی ہے اور اب کنفرم ہے۔ براہ کرم تھوک فروش کی ہدایات کے مطابق ادائیگی اور شپنگ کی تیاری کریں۔',
     'notificationDealClosedTitle': 'ڈیل بند ہوگئی',
     'notificationDealClosedBody': 'ڈیل "{0}" بند کر دی گئی ہے۔ یہ اب فعال ڈیلز میں نظر نہیں آئے گی۔',
+    'deal_closed_title': 'ڈیل بند ہوگئی!',
+    'deal_closed_body':
+        'ڈیل "{0}" باضابطہ طور پر بند کر دی گئی ہے۔ شرکت کا شکریہ!',
     'notificationOrderStatusUpdatedTitle': 'آرڈر کی صورتحال اپ ڈیٹ ہوگئی',
     'notificationOrderConfirmedBody': '"{0}" کے لیے آپ کا آرڈر کنفرم ہوگیا!',
     'notificationOrderDispatchedBody': '"{0}" کے لیے آپ کا آرڈر روانہ کر دیا گیا!',

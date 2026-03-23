@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 class SnackbarUtils {
   /// Show a success snackbar (green background)
   /// Automatically dismisses any existing snackbar first
-  static void showSuccess(BuildContext context, String message) {
+  static void showSuccess(
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 2),
+  }) {
     if (!context.mounted) return;
 
     // Clear any existing snackbar
@@ -14,7 +18,7 @@ class SnackbarUtils {
       SnackBar(
         content: Text(message),
         backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
+        duration: duration,
         behavior: SnackBarBehavior.floating,
       ),
     );

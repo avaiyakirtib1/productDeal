@@ -31,14 +31,25 @@ class ManagerDealsController
   final ManagerRepository _repo;
   int _currentPage = 1;
   String? _statusFilter;
+  bool _hasMore = true;
+  bool _inFlight = false;
 
   Future<void> loadDeals({bool refresh = false}) async {
+    if (_inFlight) return;
+
     if (refresh) {
       _currentPage = 1;
-      state = const AsyncValue.loading();
+      _hasMore = true;
     }
 
+    if (!_hasMore && !refresh) return;
+
+    _inFlight = true;
     try {
+      if (state.value == null) {
+        state = const AsyncValue.loading();
+      }
+
       final page = await _repo.fetchDeals(
         page: _currentPage,
         status: _statusFilter,
@@ -48,7 +59,7 @@ class ManagerDealsController
         state = AsyncValue.data(page);
       } else {
         final current = state.value;
-        if (current != null) {
+        if (current != null && page.items.isNotEmpty) {
           state = AsyncValue.data(
             ManagerDealsPage(
               items: [...current.items, ...page.items],
@@ -57,12 +68,22 @@ class ManagerDealsController
               totalRows: page.totalRows,
             ),
           );
-        } else {
+        } else if (current == null) {
           state = AsyncValue.data(page);
         }
       }
+
+      final snapshot = state.requireValue;
+      _hasMore = page.limit > 0 &&
+          page.items.length == page.limit &&
+          snapshot.items.length < snapshot.totalRows;
+      if (_hasMore) {
+        _currentPage++;
+      }
     } catch (e, stack) {
       state = AsyncValue.error(e, stack);
+    } finally {
+      _inFlight = false;
     }
   }
 
@@ -72,14 +93,53 @@ class ManagerDealsController
   }
 }
 
-class ManagerDealsScreen extends ConsumerWidget {
+class ManagerDealsScreen extends ConsumerStatefulWidget {
   const ManagerDealsScreen({super.key});
 
   static const routePath = '/manager/deals';
   static const routeName = 'managerDeals';
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ManagerDealsScreen> createState() =>
+      _ManagerDealsScreenState();
+}
+
+class _ManagerDealsScreenState extends ConsumerState<ManagerDealsScreen> {
+  final ScrollController _scrollController = ScrollController();
+  bool _loadingMore = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final dealsState = ref.read(managerDealsProvider);
+    if (!dealsState.hasValue) return;
+    final page = dealsState.requireValue;
+    final hasMore = page.items.length < page.totalRows;
+    if (_scrollController.position.pixels <
+        _scrollController.position.maxScrollExtent * 0.85) {
+      return;
+    }
+    if (!hasMore || _loadingMore) return;
+    _loadingMore = true;
+    ref.read(managerDealsProvider.notifier).loadDeals().whenComplete(() {
+      if (mounted) _loadingMore = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     ref.watch(
         currencyControllerProvider); // Rebuild when display currency changes
     final authState = ref.watch(authControllerProvider);
@@ -144,11 +204,12 @@ class ManagerDealsScreen extends ConsumerWidget {
 
               return RefreshIndicator(
                 onRefresh: () async {
-                  ref
+                  await ref
                       .read(managerDealsProvider.notifier)
                       .loadDeals(refresh: true);
                 },
                 child: ListView.builder(
+                  controller: _scrollController,
                   padding: EdgeInsets.only(
                     left: 16,
                     right: 16,
@@ -163,7 +224,7 @@ class ManagerDealsScreen extends ConsumerWidget {
                     return Card(
                       margin: const EdgeInsets.only(bottom: 12),
                       child: InkWell(
-                        onTap: () async {
+                          onTap: () async {
                           await context.push('/deals/${deal.id}');
                           if (context.mounted) {
                             ref

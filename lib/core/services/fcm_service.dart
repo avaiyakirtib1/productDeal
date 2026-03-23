@@ -18,9 +18,12 @@ import '../../features/dashboard/presentation/controllers/story_view_state.dart'
 import '../networking/api_client.dart';
 import 'notification_helper.dart';
 
+/// Last FCM token successfully sent to the API; used on logout if [getToken] fails.
+const String _kFcmTokenCacheKey = 'fcm_last_registered_token';
+
 // Initialize local notifications plugin
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin();
 
 /// Top-level function for handling background messages
 /// This runs in a separate isolate when app is in background/terminated
@@ -38,7 +41,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   try {
     // Ensure plugin is initialized in this isolate.
     const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@mipmap/launcher_icon');
+    AndroidInitializationSettings('@mipmap/launcher_icon');
     const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
@@ -133,7 +136,7 @@ class FCMService {
 
     // Android initialization settings
     const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@mipmap/launcher_icon');
+    AndroidInitializationSettings('@mipmap/launcher_icon');
 
     if (Platform.isIOS) {
       await FirebaseMessaging.instance
@@ -147,7 +150,7 @@ class FCMService {
     // iOS: do not request permissions here — FirebaseMessaging.requestPermission()
     // already triggers the system dialog. Duplicate requests confused users on login.
     const DarwinInitializationSettings iosSettings =
-        DarwinInitializationSettings(
+    DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
       requestSoundPermission: false,
@@ -181,7 +184,7 @@ class FCMService {
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
   }
 
@@ -334,6 +337,7 @@ class FCMService {
         '/notifications/register-token',
         data: {'fcmToken': token},
       );
+      await _prefs.setString(_kFcmTokenCacheKey, token);
       debugPrint('FCM token registered with backend');
     } catch (e) {
       debugPrint('Error registering FCM token: $e');
@@ -410,7 +414,7 @@ class FCMService {
     }
 
     const AndroidNotificationDetails androidDetails =
-        AndroidNotificationDetails(
+    AndroidNotificationDetails(
       'high_importance_channel', // Same channel ID as in AndroidManifest
       'High Importance Notifications',
       channelDescription: 'This channel is used for important notifications.',
@@ -452,25 +456,37 @@ class FCMService {
     _notificationDataHandler?.call(type, data);
   }
 
-  /// Unregister token (call on logout)
-  Future<void> unregisterToken() async {
+  /// Token to send with [AuthRepository.logout] (`POST /auth/logout`) so the server
+  /// can `$pull` only this device. Falls back to the last registered token if needed.
+  Future<String?> resolveTokenForLogout() async {
     try {
-      final token = await _messaging.getToken();
-      if (token != null) {
-        // Unregister from backend
-        await _dio.post(
-          '/notifications/unregister-token',
-          data: {'fcmToken': token},
-        );
-        debugPrint('FCM token unregistered from backend');
+      Firebase.app();
+    } catch (_) {
+      return _prefs.getString(_kFcmTokenCacheKey);
+    }
 
-        // Delete token from Firebase Messaging
-        await _messaging.deleteToken();
-        debugPrint('FCM token deleted from Firebase');
+    try {
+      final vapidKey = AppConfig.fcmWebVapidKey;
+      final token = await _messaging.getToken(
+        vapidKey: kIsWeb && vapidKey.isNotEmpty ? vapidKey : null,
+      );
+      if (token != null && token.isNotEmpty) {
+        return token;
       }
     } catch (e) {
-      debugPrint('Error unregistering FCM token: $e');
+      debugPrint('resolveTokenForLogout getToken failed: $e');
     }
+    return _prefs.getString(_kFcmTokenCacheKey);
+  }
+
+  /// After the backend removed this device (or logout skipped), drop local FCM state.
+  Future<void> clearLocalPushRegistration() async {
+    try {
+      await _messaging.deleteToken();
+    } catch (e) {
+      debugPrint('deleteToken on logout: $e');
+    }
+    await _prefs.remove(_kFcmTokenCacheKey);
   }
 
   /// Dispose resources

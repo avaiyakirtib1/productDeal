@@ -86,6 +86,10 @@ class GermanFile {
     'russian': 'Russisch',
     'sourceLanguageLabel': 'Inhaltssprache',
     'sourceLanguageHint': 'Sprache des eingegebenen Textes (wird in andere Sprachen übersetzt)',
+    'selectYourLanguage': 'Wählen Sie Ihre Sprache',
+    'selectYourLanguageSubtitle':
+        'Wählen Sie die Sprache der App. Sie können sie später in den Einstellungen ändern.',
+    'continueButton': 'Weiter',
     // ============================================
     // Common / General
     // ============================================
@@ -322,6 +326,18 @@ class GermanFile {
     'address': 'Adresse',
     'streetAddress': 'Straßenadresse',
     'addressWillBeGeocoded': 'Die Adresse wird automatisch geokodiert, um Koordinaten zu erhalten',
+    'addressSearchHint': 'Adresse suchen',
+    'placesLookupFailed':
+        'Adressdetails konnten nicht vom Server geladen werden. Sie können Ihre '
+        'Adresse manuell eingeben oder bearbeiten.',
+    'placesNoAddressResults':
+        'Keine Adressen gefunden. Versuchen Sie eine andere Suche.',
+    'placesAddressSearchConfigError':
+        'Adresssuche nicht verfügbar. Prüfen Sie Ihre Verbindung und ob die App '
+        'den richtigen API-Server verwendet (API_BASE_URL).',
+    'placesAddressSearchRequestFailed':
+        'Adresssuche fehlgeschlagen. Prüfen Sie Ihre Verbindung oder versuchen '
+        'Sie es später erneut.',
     'getLocation': 'Standort abrufen',
     'selectRole': 'Wählen Sie Rolle aus',
     'accountType': 'Kontotyp',
@@ -330,6 +346,7 @@ class GermanFile {
     'signIn': 'Anmelden',
     'registrationReceived': 'Anmeldung erhalten! Wir benachrichtigen Sie, sobald das Konto genehmigt wurde.',
     'fullNameRequired': 'Der vollständige Name ist erforderlich',
+    'fullNameMinLength': 'Der Name muss mindestens 3 Zeichen lang sein',
     'emailRequired': 'E-Mail ist erforderlich',
     'provideValidEmail': 'Geben Sie eine gültige E-Mail-Adresse an',
     'phoneNumberOptional': 'Telefonnummer (optional)',
@@ -882,7 +899,7 @@ class GermanFile {
         'Ihr voller Umsatz aus gelieferten Produktbestellungen und Deal-Bestellungen, bei denen Sie Deal-Inhaber sind.',
     'errorLoading': 'Fehler beim Laden',
     'activeShops': 'Aktive Großhändler',
-    'activeMembers': 'Aktive Geschäfte / Koisks',
+    'activeMembers': 'Aktive Geschäfte / Kiosk',
     'inactiveMembers': 'Inaktive Shops',
     'activeShopsSubtitle': 'Verifizierte Großhändler auf der Plattform',
     'activeMembersSubtitle': 'Geschäfte, die kürzlich bestellt haben',
@@ -895,6 +912,15 @@ class GermanFile {
     'deselect': 'Abwählen',
     'recipients': 'Empfänger',
     'notificationSent': 'Benachrichtigung gesendet',
+    'notifyDealParticipantsTitle': 'Deal-Teilnehmer benachrichtigen',
+    'notifyDealParticipantsAudienceWarning':
+        'Diese Nachricht wird nur an Nutzer gesendet, die eine Bestellung für diesen Deal aufgegeben haben.',
+    'notifyDealParticipantsSendUpdateTooltip': 'Update senden',
+    'notifyDealParticipantsSending': 'Senden...',
+    'notifyDealParticipantsNoParticipantsError':
+        'Senden nicht möglich: Bisher hat sich noch kein Nutzer diesem Deal angeschlossen.',
+    'notifyDealParticipantsFailedToSend':
+        'Benachrichtigung konnte nicht gesendet werden: {error}',
     'noInactiveMembers': 'Keine inaktiven Mitglieder',
     'selectAll': 'Alles auswählen',
     'sendNotification': 'Benachrichtigung senden',
@@ -1307,6 +1333,9 @@ class GermanFile {
     'notificationDealClosedTitle': 'Deal geschlossen',
     'notificationDealClosedBody':
         'Der Deal "{0}" wurde geschlossen. Er erscheint nicht mehr in den aktiven Deals.',
+    'deal_closed_title': 'Deal geschlossen!',
+    'deal_closed_body':
+        'Der Deal „{0}“ wurde offiziell geschlossen. Vielen Dank für Ihre Teilnahme!',
     'notificationOrderStatusUpdatedTitle': 'Bestellstatus aktualisiert',
     'notificationOrderConfirmedBody':
         'Ihre Bestellung für "{0}" wurde bestätigt!',

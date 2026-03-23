@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/networking/api_client.dart';
+import '../manager_deals_page_parse.dart';
 import '../models/manager_models.dart';
 import '../../../admin/data/models/admin_user_model.dart';
 import 'dart:convert';
@@ -110,7 +111,13 @@ class ManagerRepository {
         '/manager/deals',
         queryParameters: query,
       );
-      return ManagerDealsPage.fromJson(response.data ?? const {});
+      final body = Map<String, dynamic>.from(response.data ?? const {});
+      final raw = body['data'];
+      final count = raw is List ? raw.length : 0;
+      if (count >= 12) {
+        return compute(parseManagerDealsPageIsolate, body);
+      }
+      return ManagerDealsPage.fromJson(body);
     } on DioException catch (error) {
       debugPrint('ManagerDeals error: ${error.response?.data}');
       throw mapDioException(error);
@@ -439,6 +446,34 @@ class ManagerRepository {
       return response.data?['data'] as Map<String, dynamic>? ?? {};
     } on DioException catch (error) {
       debugPrint('FetchDealDetail error: ${error.response?.data}');
+      throw mapDioException(error);
+    }
+  }
+
+  /// Admin/SubAdmin: notify deal participants (targeted by deal orders).
+  Future<void> notifyDealParticipants(
+    String dealId, {
+    String? customTitle,
+    String? customMessage,
+  }) async {
+    try {
+      final data = <String, dynamic>{};
+      final trimmedTitle = customTitle?.trim();
+      final trimmedMessage = customMessage?.trim();
+
+      if (trimmedTitle != null && trimmedTitle.isNotEmpty) {
+        data['customTitle'] = trimmedTitle;
+      }
+      if (trimmedMessage != null && trimmedMessage.isNotEmpty) {
+        data['customMessage'] = trimmedMessage;
+      }
+
+      await _dio.post(
+        '/manager/deals/$dealId/notify',
+        data: data,
+      );
+    } on DioException catch (error) {
+      debugPrint('NotifyDealParticipants error: ${error.response?.data}');
       throw mapDioException(error);
     }
   }

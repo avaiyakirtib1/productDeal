@@ -3,8 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_languages.dart';
 import '../../../../core/localization/app_localizations.dart';
+import '../../../../core/localization/language_controller.dart';
 import '../../../../core/utils/snackbar.dart';
+import '../../../../shared/widgets/inline_language_selector.dart';
 import '../../../../shared/widgets/primary_button.dart';
 import '../../../../shared/widgets/primary_text_field.dart';
 import '../../data/models/auth_models.dart';
@@ -90,10 +93,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final loginState = ref.watch(loginFormControllerProvider);
     // Only show loading in button, not full screen
     final isLoading = loginState.isLoading;
+    final locale = ref.watch(languageControllerProvider);
+    final rawLangCode = locale.languageCode;
+    final languageCode = AppLanguages.isSupported(rawLangCode)
+        ? rawLangCode
+        : AppLanguages.defaultLanguageCode;
+    final l10nForm = AppLocalizations.of(context);
 
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
+          clipBehavior: Clip.none,
           padding: const EdgeInsets.only(bottom: 32),
           child: Column(
             children: [
@@ -163,6 +173,38 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           return const SizedBox.shrink();
                         },
                       ),
+                      IgnorePointer(
+                        ignoring: isLoading,
+                        child: Opacity(
+                          opacity: isLoading ? 0.5 : 1.0,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10nForm?.selectYourLanguage ??
+                                    'Select language',
+                                style: Theme.of(context).textTheme.labelLarge,
+                              ),
+                              const SizedBox(height: 8),
+                              InlineLanguageSelector(
+                                currentValue: languageCode,
+                                availableLanguages:
+                                    AppLanguages.supportedCodes,
+                                onChanged: (code) {
+                                  if (code == rawLangCode) return;
+                                  ref
+                                      .read(languageControllerProvider
+                                          .notifier)
+                                      .setLanguage(
+                                        AppLanguage.fromCode(code),
+                                      );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
                       Builder(
                         builder: (context) {
                           final l10n = AppLocalizations.of(context);

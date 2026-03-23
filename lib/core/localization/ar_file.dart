@@ -86,6 +86,10 @@ class ArabicFile {
     'russian': 'الروسية',
     'sourceLanguageLabel': 'لغة المحتوى',
     'sourceLanguageHint': 'لغة النص الذي تدخله (سيتم ترجمته إلى لغات أخرى)',
+    'selectYourLanguage': 'اختر لغتك',
+    'selectYourLanguageSubtitle':
+        'اختر لغة التطبيق. يمكنك تغييرها لاحقاً في الإعدادات.',
+    'continueButton': 'متابعة',
     // ============================================
     // Common / General
     // ============================================
@@ -321,6 +325,16 @@ class ArabicFile {
     'address': 'عنوان',
     'streetAddress': '.عنوان الشارع',
     'addressWillBeGeocoded': 'سيتم ترميز العنوان جغرافيًا تلقائيًا للحصول على الإحداثيات',
+    'addressSearchHint': 'ابحث عن عنوانك',
+    'placesLookupFailed':
+        'تعذر تحميل تفاصيل العنوان من الخادم. يمكنك كتابة عنوانك أو تعديله يدويًا.',
+    'placesNoAddressResults':
+        'لم يتم العثور على عناوين. جرّب بحثًا مختلفًا.',
+    'placesAddressSearchConfigError':
+        'بحث العنوان غير متاح. تحقق من الشبكة وأن التطبيق يشير إلى خادم API '
+        'الصحيح (API_BASE_URL).',
+    'placesAddressSearchRequestFailed':
+        'فشل بحث العنوان. تحقق من الاتصال أو حاول مرة أخرى لاحقًا.',
     'getLocation': 'احصل على الموقع',
     'selectRole': 'حدد الدور',
     'accountType': 'نوع الحساب',
@@ -329,6 +343,7 @@ class ArabicFile {
     'signIn': 'تسجيل الدخول',
     'registrationReceived': 'تم استلام التسجيل! سنقوم بإعلامك بمجرد الموافقة على الحساب.',
     'fullNameRequired': 'الاسم الكامل مطلوب',
+    'fullNameMinLength': 'يجب أن يكون الاسم الكامل 3 أحرف على الأقل',
     'emailRequired': 'البريد الإلكتروني مطلوب',
     'provideValidEmail': 'توفير بريد إلكتروني صالح',
     'phoneNumberOptional': 'رقم الهاتف (اختياري)',
@@ -880,6 +895,15 @@ class ArabicFile {
     'deselect': 'قم بإلغاء التحديد',
     'recipients': 'المستلمون',
     'notificationSent': 'تم إرسال الإشعار',
+    'notifyDealParticipantsTitle': 'إشعار المشاركين في الصفقة',
+    'notifyDealParticipantsAudienceWarning':
+        'سيتم إرسال هذه الرسالة فقط إلى المستخدمين الذين قاموا بإجراء طلب لهذه الصفقة.',
+    'notifyDealParticipantsSendUpdateTooltip': 'إرسال التحديث',
+    'notifyDealParticipantsSending': 'جارٍ الإرسال...',
+    'notifyDealParticipantsNoParticipantsError':
+        'تعذر الإرسال: لم ينضم أي مستخدم إلى هذه الصفقة بعد.',
+    'notifyDealParticipantsFailedToSend':
+        'فشل إرسال الإشعار: {error}',
     'noInactiveMembers': 'لا يوجد أعضاء غير نشطين',
     'selectAll': 'حدد الكل',
     'sendNotification': 'إرسال الإخطار',
@@ -1269,6 +1293,9 @@ class ArabicFile {
     'notificationDealSuccessBody': 'صفقتك الجماعية "{0}" وصلت إلى الكمية المطلوبة وأصبحت مؤكدة. يرجى الاستعداد للدفع والشحن وفقًا لتعليمات الموزّع.',
     'notificationDealClosedTitle': 'تم إغلاق الصفقة',
     'notificationDealClosedBody': 'تم إغلاق الصفقة "{0}". لن تظهر بعد الآن ضمن الصفقات النشطة.',
+    'deal_closed_title': 'تم إغلاق الصفقة!',
+    'deal_closed_body':
+        'تم إغلاق الصفقة "{0}" رسميًا. شكرًا لمشاركتك!',
     'notificationOrderStatusUpdatedTitle': 'تم تحديث حالة الطلب',
     'notificationOrderConfirmedBody': 'تم تأكيد طلبك لـ "{0}"!',
     'notificationOrderDispatchedBody': 'تم إرسال طلبك لـ "{0}"!',

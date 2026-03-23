@@ -977,13 +977,13 @@ class _OrderActionButtonsState extends ConsumerState<_OrderActionButtons> {
             onPressed: () async {
               try {
                 await ref.read(dealRepositoryProvider).sendDealOrderPaymentInstructions(order.id);
-                if (!mounted) return;
+                if (!context.mounted) return;
                 SnackbarUtils.showSuccess(
                   context,
                   l10n?.invoiceInstructionsSent ?? 'Payment instructions were sent by email.',
                 );
               } catch (e) {
-                if (!mounted) return;
+                if (!context.mounted) return;
                 SnackbarUtils.showError(context, '${l10n?.failedToPlaceOrder ?? 'Failed'}: $e');
               }
             },

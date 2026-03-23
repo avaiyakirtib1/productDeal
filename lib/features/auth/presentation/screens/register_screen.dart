@@ -3,8 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_languages.dart';
 import '../../../../core/localization/app_localizations.dart';
+import '../../../../core/localization/language_controller.dart';
 import '../../../../core/utils/snackbar.dart';
+import '../../../../shared/widgets/inline_language_selector.dart';
 import '../../../../shared/widgets/payment_mode_selector.dart';
 import '../../../../shared/widgets/primary_button.dart';
 import '../../../../shared/widgets/primary_text_field.dart';
@@ -14,6 +17,7 @@ import '../controllers/register_form_controller.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/auth_role_selector.dart';
 import '../widgets/legal_document_viewer.dart';
+import '../widgets/register_places_address_field.dart';
 import 'login_screen.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -44,9 +48,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _businessController = TextEditingController();
-  final _countryController = TextEditingController();
-  final _cityController = TextEditingController();
   final _addressController = TextEditingController();
+  String? _resolvedCity;
+  String? _resolvedCountry;
   final _paymentIbanController = TextEditingController();
   final _paymentBankAccountOwnerController = TextEditingController();
   bool _obscurePassword = true;
@@ -104,8 +108,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     _businessController.dispose();
-    _countryController.dispose();
-    _cityController.dispose();
     _addressController.dispose();
     _paymentIbanController.dispose();
     _paymentBankAccountOwnerController.dispose();
@@ -191,12 +193,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             businessName: _businessController.text.trim().isEmpty
                 ? null
                 : _businessController.text.trim(),
-            country: _countryController.text.trim().isEmpty
-                ? null
-                : _countryController.text.trim(),
-            city: _cityController.text.trim().isEmpty
-                ? null
-                : _cityController.text.trim(),
+            country: _resolvedCountry != null &&
+                    _resolvedCountry!.trim().isNotEmpty
+                ? _resolvedCountry!.trim()
+                : null,
+            city: _resolvedCity != null && _resolvedCity!.trim().isNotEmpty
+                ? _resolvedCity!.trim()
+                : null,
             address: _addressController.text.trim().isEmpty
                 ? null
                 : _addressController.text.trim(),
@@ -234,10 +237,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final registerState = ref.watch(registerFormControllerProvider);
     final isLoading = registerState.isLoading;
     final l10n = AppLocalizations.of(context);
+    final locale = ref.watch(languageControllerProvider);
+    final rawLangCode = locale.languageCode;
+    final languageCode = AppLanguages.isSupported(rawLangCode)
+        ? rawLangCode
+        : AppLanguages.defaultLanguageCode;
 
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
+          clipBehavior: Clip.none,
           padding: const EdgeInsets.only(bottom: 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,6 +331,39 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 12),
+                      IgnorePointer(
+                        ignoring: isLoading,
+                        child: Opacity(
+                          opacity: isLoading ? 0.5 : 1.0,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n?.selectYourLanguage ??
+                                    'Select language',
+                                style:
+                                    Theme.of(context).textTheme.labelLarge,
+                              ),
+                              const SizedBox(height: 8),
+                              InlineLanguageSelector(
+                                currentValue: languageCode,
+                                availableLanguages:
+                                    AppLanguages.supportedCodes,
+                                onChanged: (code) {
+                                  if (code == rawLangCode) return;
+                                  ref
+                                      .read(languageControllerProvider
+                                          .notifier)
+                                      .setLanguage(
+                                        AppLanguage.fromCode(code),
+                                      );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 24),
                       PrimaryTextField(
                         formFieldKey: _fullNameKey,
@@ -333,6 +375,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           if (value == null || value.isEmpty) {
                             return l10n?.fullNameRequired ??
                                 'Full name is required';
+                          }
+                          if (value.trim().length < 3) {
+                            return l10n?.fullNameMinLength ??
+                                'Full name must be at least 3 characters';
                           }
                           return null;
                         },
@@ -385,35 +431,19 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         enabled: !isLoading, // Disable during registration
                       ),
                       const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: PrimaryTextField(
-                              controller: _countryController,
-                              label: l10n?.country ?? 'Country',
-                              enabled:
-                                  !isLoading, // Disable during registration
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: PrimaryTextField(
-                              controller: _cityController,
-                              label: l10n?.city ?? 'City',
-                              enabled:
-                                  !isLoading, // Disable during registration
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      PrimaryTextField(
+                      RegisterPlacesAddressField(
                         controller: _addressController,
+                        enabled: !isLoading,
                         label: l10n?.streetAddress ?? 'Street address',
-                        maxLines: 2,
-                        enabled: !isLoading, // Disable during registration
+                        hintText: l10n?.addressSearchHint ?? 'Search your address',
                         helperText: l10n?.addressWillBeGeocoded ??
                             'Address will be automatically geocoded to get coordinates',
+                        onStructuredChanged: (city, country) {
+                          setState(() {
+                            _resolvedCity = city;
+                            _resolvedCountry = country;
+                          });
+                        },
                       ),
                       const SizedBox(height: 16),
                       PrimaryTextField(

@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/localization/app_localizations.dart';
+import '../../../../core/media/dashboard_image_url.dart';
 import '../../../../core/localization/currency_controller.dart';
 import '../../../../core/services/currency_service.dart';
 import '../../../deals/data/models/deal_models.dart';
@@ -15,7 +17,6 @@ final activeDealsProvider = FutureProvider.autoDispose
   final page = await repo.fetchDeals(
     page: 1,
     limit: 10,
-    status: DealStatus.live,
     wholesalerId: wholesalerId,
   );
   return page.items;
@@ -145,6 +146,8 @@ class ActiveDealsSection extends ConsumerWidget {
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
+            primary: false,
+            physics: const BouncingScrollPhysics(),
             itemCount: items.length,
             separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (context, index) {
@@ -168,7 +171,13 @@ class _DealCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    final imageUrl = _resolveImageUrl(deal);
+    final rawImageUrl = _resolveImageUrl(deal);
+    final imageUrl = rawImageUrl != null
+        ? dashboardListImageUrl(rawImageUrl, maxWidth: 480)
+        : null;
+    final isClosed = deal.isEnded;
+    final memCacheWidth =
+        (MediaQuery.devicePixelRatioOf(context) * 220).round();
 
     return SizedBox(
       width: 220,
@@ -179,18 +188,67 @@ class _DealCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 120,
-                width: double.infinity,
-                child: imageUrl == null
-                    ? Container(
-                        color: theme.colorScheme.surfaceContainerHighest,
-                        child: const Icon(Icons.local_offer_outlined, size: 32),
-                      )
-                    : Image.network(
-                        imageUrl,
-                        fit: BoxFit.cover,
+              Opacity(
+                opacity: isClosed ? 0.65 : 1,
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      height: 120,
+                      width: double.infinity,
+                      child: imageUrl == null
+                          ? Container(
+                              color: theme.colorScheme.surfaceContainerHighest,
+                              child: const Icon(
+                                Icons.local_offer_outlined,
+                                size: 32,
+                              ),
+                            )
+                          : CachedNetworkImage(
+                              imageUrl: imageUrl,
+                              fit: BoxFit.cover,
+                              memCacheWidth: memCacheWidth,
+                              maxWidthDiskCache: 960,
+                              placeholder: (_, __) => Container(
+                                color: theme
+                                    .colorScheme.surfaceContainerHighest,
+                              ),
+                              errorWidget: (_, __, ___) => Container(
+                                color:
+                                    theme.colorScheme.surfaceContainerHighest,
+                                child: const Icon(
+                                  Icons.local_offer_outlined,
+                                  size: 32,
+                                ),
+                              ),
+                            ),
+                    ),
+                    if (isClosed)
+                      Positioned(
+                        top: 10,
+                        left: 10,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.error,
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
+                            child: Text(
+                              l10n?.closed ?? 'Closed',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: theme.colorScheme.onError,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.2,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(12),

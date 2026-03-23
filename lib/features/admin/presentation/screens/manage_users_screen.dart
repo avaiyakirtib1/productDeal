@@ -404,11 +404,9 @@ class _ManageUsersScreenState extends ConsumerState<ManageUsersScreen> {
                                         ),
                                       ],
                                     ),
-                                    onTap: () {
-                                      //_showUserDetails(context, user);
-                                      _showEditUserModal(
-                                          context, ref, user);
-                                    },
+                                    onTap: () =>
+                                       _showEditUserModal(
+                                              context, ref, user),
                                   ),
                                 );
                               },
@@ -484,6 +482,7 @@ class _ManageUsersScreenState extends ConsumerState<ManageUsersScreen> {
     );
   }
 
+  // ignore: unused_element
   void _showUserDetails(BuildContext context, AdminUser user) {
     // Fetch full user details including verification documents
     final userDetailAsync =

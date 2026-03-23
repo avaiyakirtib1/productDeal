@@ -173,14 +173,14 @@ class _MyOrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
                               .read(orderRepositoryProvider)
                               .updateOrderPaymentStatus(
                                   widget.orderId, 'completed');
-                          if (!mounted) return;
+                          if (!context.mounted) return;
                           ref.invalidate(myOrderDetailProvider(widget.orderId));
                           SnackbarUtils.showSuccess(
                             context,
                             l10n?.orderMarkedPaid ?? 'Order marked as paid',
                           );
                         } catch (e) {
-                          if (!mounted) return;
+                          if (!context.mounted) return;
                           SnackbarUtils.showError(
                             context,
                             '${l10n?.failedToMarkOrderPaid ?? 'Failed'}: $e',
@@ -195,14 +195,14 @@ class _MyOrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
                             await ref
                                 .read(orderRepositoryProvider)
                                 .sendPaymentInstructions(widget.orderId);
-                            if (!mounted) return;
+                            if (!context.mounted) return;
                             SnackbarUtils.showSuccess(
                               context,
                               l10n?.invoiceInstructionsSent ??
                                   'Payment instructions were sent by email.',
                             );
                           } catch (e) {
-                            if (!mounted) return;
+                            if (!context.mounted) return;
                             SnackbarUtils.showError(
                               context,
                               '${l10n?.failedToPlaceOrder ?? 'Failed'}: $e',
@@ -597,8 +597,7 @@ class _OrderHeaderCard extends StatelessWidget {
                       icon: const Icon(Icons.payment),
                       label: Text(
                         order.paymentReportedByBuyerAt != null
-                            ? (l10n?.reportPayment ?? "I've made the payment") +
-                                ' ✓'
+                            ? '${l10n?.reportPayment ?? "I\\'ve made the payment"} ✓'
                             : (l10n?.reportPayment ?? "I've made the payment"),
                       ),
                     ),

@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/networking/api_client.dart';
+import '../dashboard_snapshot_parse.dart';
 import '../models/dashboard_models.dart';
 
 class DashboardRepository {
@@ -20,16 +21,30 @@ class DashboardRepository {
       query['lng'] = longitude;
     }
 
+    final networkSw = Stopwatch()..start();
     final response = await _dio.get<Map<String, dynamic>>(
       '/catalog/dashboard',
       queryParameters: query.isEmpty ? null : query,
     );
-
+    networkSw.stop();
     debugPrint(
-        '✅ DashboardRepository: Dashboard Stories Data : ${response.data?['data']?['stories']}');
-    return DashboardSnapshot.fromJson(
-      response.data?['data'] as Map<String, dynamic>? ?? const {},
+      '⏱️ DashboardRepository: /catalog/dashboard network '
+      '${networkSw.elapsedMilliseconds}ms',
     );
+
+    final payload = response.data?['data'] as Map<String, dynamic>? ?? const {};
+    final activeDealsRaw = payload['activeDeals'] as List<dynamic>? ??
+        const [];
+    debugPrint('Fetched Deals Count: ${activeDealsRaw.length}');
+
+    final parseSw = Stopwatch()..start();
+    final snapshot = await compute(parseDashboardSnapshotIsolate, payload);
+    parseSw.stop();
+    debugPrint(
+      '⏱️ DashboardRepository: DashboardSnapshot parse (isolate) '
+      '${parseSw.elapsedMilliseconds}ms',
+    );
+    return snapshot;
   }
 
   Future<WholesalerDirectoryPage> fetchWholesalers({

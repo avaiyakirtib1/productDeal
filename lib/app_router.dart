@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'core/localization/app_localizations.dart';
+import 'core/localization/language_onboarding_provider.dart';
 import 'features/auth/presentation/controllers/auth_controller.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/auth/presentation/screens/register_screen.dart';
@@ -31,6 +32,7 @@ import 'features/deals/presentation/screens/my_deal_orders_screen.dart';
 import 'features/orders/presentation/screens/cart_screen.dart';
 import 'features/stories/presentation/screens/create_story_screen.dart';
 import 'features/options/presentation/screens/options_screen.dart';
+import 'features/onboarding/presentation/screens/initial_language_selection_screen.dart';
 import 'features/options/presentation/screens/language_selection_screen.dart';
 import 'features/options/presentation/screens/notification_settings_screen.dart';
 import 'features/options/presentation/screens/currency_selection_screen.dart';
@@ -59,6 +61,7 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authControllerProvider);
+  final hasSelectedLanguage = ref.watch(hasSelectedLanguageProvider);
 
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
@@ -68,6 +71,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: SplashScreen.routePath,
         name: SplashScreen.routeName,
         builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: InitialLanguageSelectionScreen.routePath,
+        name: InitialLanguageSelectionScreen.routeName,
+        builder: (context, state) =>
+            const InitialLanguageSelectionScreen(),
       ),
       GoRoute(
         path: LoginScreen.routePath,
@@ -444,6 +453,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final loggingIn = state.matchedLocation == LoginScreen.routePath;
       final registering = state.matchedLocation == RegisterScreen.routePath;
       final onSplash = state.matchedLocation == SplashScreen.routePath;
+      final onOnboardingLanguage =
+          state.matchedLocation ==
+              InitialLanguageSelectionScreen.routePath;
       final onTermsConsent =
           state.matchedLocation == TermsConsentScreen.routePath;
       final onQuantityChangeResult =
@@ -459,6 +471,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       }
 
       if (session == null) {
+        if (onOnboardingLanguage) return null;
+        if (!hasSelectedLanguage) {
+          return InitialLanguageSelectionScreen.routePath;
+        }
         if (loggingIn || registering) return null;
         return LoginScreen.routePath;
       }

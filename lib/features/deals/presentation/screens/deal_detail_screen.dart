@@ -20,6 +20,7 @@ import '../widgets/deal_final_payment_card.dart';
 import '../../../auth/data/models/auth_models.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../../../core/permissions/permissions.dart';
+import '../../../../core/networking/api_exception.dart';
 import '../../../../shared/utils/snackbar_utils.dart';
 import '../../../wholesaler/presentation/widgets/edit_deal_modal.dart';
 import '../../../manager/data/repositories/manager_repository.dart';
@@ -92,12 +93,15 @@ class _DealDetailScreenState extends ConsumerState<DealDetailScreen> {
 
         // Check if user can place orders (add bid). Config via Permissions.canPlaceOrderOnDeal
         final canPlaceOrder = Permissions.canPlaceOrderOnDeal(userRole);
+        // Manual deal push: admin-only (not sub-admin / wholesaler / kiosk).
+        final canNotifyDealParticipants = Permissions.isAdmin(userRole);
 
         return _DealDetailView(
           deal: detail,
           canManageDeal: canManageDeal,
           canPlaceOrder: canPlaceOrder,
           currentUserId: user?.id,
+          canNotifyDealParticipants: canNotifyDealParticipants,
         );
       },
       loading: () => const Scaffold(
@@ -168,12 +172,14 @@ class _DealDetailView extends StatelessWidget {
     required this.canManageDeal,
     required this.canPlaceOrder,
     this.currentUserId,
+    required this.canNotifyDealParticipants,
   });
 
   final DealDetail deal;
   final bool canManageDeal;
   final bool canPlaceOrder;
   final String? currentUserId;
+  final bool canNotifyDealParticipants;
 
   @override
   Widget build(BuildContext context) {
@@ -182,6 +188,7 @@ class _DealDetailView extends StatelessWidget {
       canManageDeal: canManageDeal,
       canPlaceOrder: canPlaceOrder,
       currentUserId: currentUserId,
+      canNotifyDealParticipants: canNotifyDealParticipants,
     );
   }
 }
@@ -192,12 +199,14 @@ class _DealDetailContent extends ConsumerWidget {
     required this.canManageDeal,
     required this.canPlaceOrder,
     this.currentUserId,
+    required this.canNotifyDealParticipants,
   });
 
   final DealDetail deal;
   final bool canManageDeal;
   final bool canPlaceOrder;
   final String? currentUserId;
+  final bool canNotifyDealParticipants;
   final ScrollController _controller = ScrollController();
 
   @override
@@ -218,6 +227,18 @@ class _DealDetailContent extends ConsumerWidget {
                     tooltip: l10n?.viewWholesaler ?? 'View wholesaler',
                     onPressed: () =>
                         context.push('/wholesalers/${deal.wholesaler!.id}'),
+                  );
+                },
+              ),
+            if (canNotifyDealParticipants)
+              Builder(
+                builder: (context) {
+                  final l10n = AppLocalizations.of(context)!;
+                  return IconButton(
+                    icon: const Icon(Icons.campaign),
+                    tooltip: l10n.notifyDealParticipantsSendUpdateTooltip,
+                    onPressed: () =>
+                        _openManualPushDialog(context, deal),
                   );
                 },
               ),
@@ -285,6 +306,12 @@ class _DealDetailContent extends ConsumerWidget {
                     ),
                     const SizedBox(height: 24),
 
+                    // Admin-only: manual push to deal participants (also in app bar)
+                    if (canNotifyDealParticipants) ...[
+                      _buildAdminNotifyParticipantsCard(context, deal, theme),
+                      const SizedBox(height: 24),
+                    ],
+
                     // Final payment (invoice vs card) when deal succeeded and user has unpaid orders
                     if (deal.hasSucceeded && canPlaceOrder)
                       _DealFinalPaymentSection(
@@ -316,8 +343,7 @@ class _DealDetailContent extends ConsumerWidget {
                       const SizedBox(height: 16),
                     ],
 
-                    //
-                    // // Wholesaler Info
+                    // Wholesaler Info
                     // if (deal.wholesaler != null) ...[
                     //   _buildWholesalerCard(context, deal, theme),
                     //   const SizedBox(height: 24),
@@ -328,7 +354,9 @@ class _DealDetailContent extends ConsumerWidget {
                       DealOrderForm(
                         deal: deal,
                         onOrderPlaced: () {
-                          debugPrint('Order placed - form will reset itself');
+                          ref.invalidate(dealDetailProvider(deal.id));
+                          ref.invalidate(dealOrdersForDealProvider(deal.id));
+                          ref.invalidate(dealFinalPaymentSummaryProvider(deal.id));
                         },
                       )
                     else if (deal.isActive && !deal.isEnded && !canPlaceOrder)
@@ -341,6 +369,63 @@ class _DealDetailContent extends ConsumerWidget {
             ],
           ),
         ));
+  }
+
+  void _openManualPushDialog(BuildContext context, DealDetail deal) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => _ManualPushDialog(
+        dealId: deal.id,
+        dealName: deal.title,
+      ),
+    );
+  }
+
+  /// Visible admin-only entry point (campaign icon also appears in the app bar).
+  Widget _buildAdminNotifyParticipantsCard(
+      BuildContext context, DealDetail deal, ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
+    return Card(
+      color: theme.colorScheme.surfaceContainerHighest,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.campaign_outlined,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    l10n.notifyDealParticipantsTitle,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.notifyDealParticipantsAudienceWarning,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 12),
+            FilledButton.icon(
+              onPressed: () => _openManualPushDialog(context, deal),
+              icon: const Icon(Icons.send_outlined),
+              label: Text(l10n.notifyDealParticipantsSendUpdateTooltip),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildHeroImage(
@@ -774,6 +859,7 @@ class _DealDetailContent extends ConsumerWidget {
     );
   }
 
+  // ignore: unused_element
   Widget _buildWholesalerCard(
       BuildContext context, DealDetail deal, ThemeData theme) {
     return Card(
@@ -824,7 +910,7 @@ class _DealDetailContent extends ConsumerWidget {
                   final l10n = AppLocalizations.of(context);
                   return Text(
                     deal.isEnded
-                        ? (l10n?.dealEnded ?? 'This deal has ended')
+                        ? (l10n?.dealClosed ?? 'Deal Closed')
                         : (l10n?.dealNotStarted ?? 'This deal has not started yet'),
                     style: theme.textTheme.bodyLarge,
                   );
@@ -1086,6 +1172,172 @@ class _InfoItem extends StatelessWidget {
         Text(
           label,
           style: theme.textTheme.bodySmall,
+        ),
+      ],
+    );
+  }
+}
+
+class _ManualPushDialog extends ConsumerStatefulWidget {
+  const _ManualPushDialog({
+    required this.dealId,
+    required this.dealName,
+  });
+
+  final String dealId;
+  final String dealName;
+
+  @override
+  ConsumerState<_ManualPushDialog> createState() => _ManualPushDialogState();
+}
+
+class _ManualPushDialogState extends ConsumerState<_ManualPushDialog> {
+  late final TextEditingController _titleController;
+  late final TextEditingController _bodyController;
+
+  bool _isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController(
+      text: 'Update: ${widget.dealName}',
+    );
+    _bodyController = TextEditingController(
+      text:
+          'There is a new update regarding your order for this deal. Tap to view details.',
+    );
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _bodyController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleSend() async {
+    if (_isSubmitting) return;
+    setState(() => _isSubmitting = true);
+
+    try {
+      await ref.read(managerRepositoryProvider).notifyDealParticipants(
+            widget.dealId,
+            customTitle: _titleController.text,
+            customMessage: _bodyController.text,
+          );
+
+      if (!context.mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      SnackbarUtils.showSuccess(context, l10n.notificationSent);
+      Navigator.of(context).pop();
+    } on ApiException catch (e) {
+      if (!context.mounted) return;
+      if (e.message == 'No participants to notify.') {
+        final l10n = AppLocalizations.of(context)!;
+        SnackbarUtils.showError(
+          context,
+          l10n.notifyDealParticipantsNoParticipantsError,
+        );
+      } else {
+        SnackbarUtils.showError(context, e.message);
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      final message = l10n.notifyDealParticipantsFailedToSend
+          .replaceAll('{error}', e.toString());
+      SnackbarUtils.showError(context, message);
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return AlertDialog(
+      title: Row(
+        children: [
+          Icon(Icons.campaign, color: theme.colorScheme.primary),
+          const SizedBox(width: 8),
+          Text(
+            l10n.notifyDealParticipantsTitle,
+          ),
+        ],
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  size: 20,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    l10n.notifyDealParticipantsAudienceWarning,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(
+                labelText: l10n.title,
+              ),
+              textInputAction: TextInputAction.next,
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _bodyController,
+              decoration: InputDecoration(
+                labelText: l10n.body,
+              ),
+              minLines: 4,
+              maxLines: 6,
+              textInputAction: TextInputAction.newline,
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
+          child: Text(l10n.cancel),
+        ),
+        ElevatedButton(
+          onPressed: _isSubmitting ? null : _handleSend,
+          child: _isSubmitting
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      l10n.notifyDealParticipantsSending,
+                    ),
+                  ],
+                )
+              : Text(l10n.sendNotification),
         ),
       ],
     );

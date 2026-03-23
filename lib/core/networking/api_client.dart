@@ -48,7 +48,14 @@ final dioProvider = Provider<Dio>((ref) {
       if (token != null && token.isNotEmpty) {
         options.headers['Authorization'] = 'Bearer $token';
       } else {
-        debugPrint('⚠️ API call without token: ${options.path}');
+        const publicAuthPaths = {
+          '/auth/login',
+          '/auth/register',
+          '/auth/refresh',
+        };
+        if (!publicAuthPaths.contains(options.path)) {
+          debugPrint('⚠️ API call without token: ${options.path}');
+        }
       }
       handler.next(options);
     },

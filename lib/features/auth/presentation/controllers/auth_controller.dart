@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/networking/api_exception.dart';
 import '../../../../core/services/fcm_service.dart';
 import '../../../../core/storage/session_storage.dart';
+import '../../../../core/constants/app_languages.dart';
+import '../../../../core/localization/language_controller.dart';
 import '../../data/models/auth_models.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../../orders/presentation/controllers/cart_controller.dart';
@@ -36,12 +38,34 @@ class AuthController extends AsyncNotifier<AuthSession?> {
     final result = await AsyncValue.guard(() async {
       final session = await _repository.login(payload);
       await _storage.persistSession(session);
-      // FCM is started from [fcmInitializedProvider] when the shell sees a logged-in
-      // user (see app.dart). Avoid awaiting notification permission here — on iOS that
-      // blocked auth completion and made login appear broken.
+
+      // Initialize FCM after successful login
+      // try {
+      //   final fcmService = ref.read(fcmServiceProvider);
+      //   await fcmService.initialize();
+      // } catch (e) {
+      //   debugPrint('Error initializing FCM after login: $e');
+      // }
+
       return session;
     });
     state = result;
+
+    // If login succeeded and user is admin/sub-admin, enforce German as the language
+    final loggedInUser = result.valueOrNull?.user;
+    if (loggedInUser != null &&
+        (loggedInUser.role == UserRole.admin ||
+            loggedInUser.role == UserRole.subAdmin)) {
+      try {
+        await ref
+            .read(languageControllerProvider.notifier)
+            .setLanguage(AppLanguage.german);
+        debugPrint('🇩🇪 Admin login: language set to German');
+      } catch (e) {
+        debugPrint('⚠️ Failed to set German for admin: $e');
+      }
+    }
+
     // Rethrow so LoginFormController's AsyncValue.guard sees the error and shows error UI/snackbar
     result.whenOrNull(error: (err, _) => throw err);
   }
@@ -107,13 +131,14 @@ class AuthController extends AsyncNotifier<AuthSession?> {
     _lastLogoutReason = reason;
 
     // Clear all data - proceed even if any operation fails
-    // 1. Try to unregister FCM token (non-blocking)
+    // 1. Tell the server to drop this device's FCM token (JWT still valid)
     try {
       final fcmService = ref.read(fcmServiceProvider);
-      await fcmService.unregisterToken();
+      final fcmToken = await fcmService.resolveTokenForLogout();
+      await _repository.logout(fcmToken: fcmToken);
+      await fcmService.clearLocalPushRegistration();
     } catch (e) {
-      debugPrint('Error unregistering FCM token on logout: $e');
-      // Continue with logout even if FCM unregistration fails
+      debugPrint('Error FCM/server logout cleanup: $e');
     }
 
     // 2. Clear cart data (non-blocking)
@@ -159,7 +184,6 @@ class AuthController extends AsyncNotifier<AuthSession?> {
 final authControllerProvider =
     AsyncNotifierProvider<AuthController, AuthSession?>(() => AuthController(),
         name: 'AuthControllerProvider');
-
 /// Starts FCM when a session exists; [autoDispose] so each login re-runs token registration.
 final fcmInitializedProvider = FutureProvider.autoDispose<void>((ref) async {
   final session = ref.watch(authControllerProvider).valueOrNull;

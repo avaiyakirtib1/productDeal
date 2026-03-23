@@ -88,6 +88,10 @@ class EnglishFile {
     'russian': 'Russian',
     'sourceLanguageLabel': 'Content language',
     'sourceLanguageHint': 'Language of the text you enter (will be translated to other languages)',
+    'selectYourLanguage': 'Select your language',
+    'selectYourLanguageSubtitle':
+        'Choose the language for the app. You can change it later in settings.',
+    'continueButton': 'Continue',
 
     // ============================================
     // Common / General
@@ -353,6 +357,17 @@ class EnglishFile {
     'streetAddress': 'Street address',
     'addressWillBeGeocoded':
         'Address will be automatically geocoded to get coordinates',
+    'addressSearchHint': 'Search your address',
+    'placesLookupFailed':
+        'Could not load address details from the server. You can type or edit '
+            'your address manually.',
+    'placesNoAddressResults':
+        'No addresses found. Try a different search.',
+    'placesAddressSearchConfigError':
+        'Address search is unavailable. Check your network and that this app '
+            'uses the correct API server (API_BASE_URL).',
+    'placesAddressSearchRequestFailed':
+        'Address search failed. Check your connection or try again later.',
     'getLocation': 'Get Location',
     'selectRole': 'Select Role',
     'accountType': 'Account type',
@@ -362,6 +377,7 @@ class EnglishFile {
     'registrationReceived':
         'Registration received! We will notify you once the account is approved.',
     'fullNameRequired': 'Full name is required',
+    'fullNameMinLength': 'Full name must be at least 3 characters',
     'emailRequired': 'Email is required',
     'provideValidEmail': 'Provide a valid email',
     'phoneNumberOptional': 'Phone number (optional)',
@@ -1021,6 +1037,15 @@ class EnglishFile {
     'deselect': 'Deselect',
     'recipients': 'Recipients',
     'notificationSent': 'Notification sent',
+    'notifyDealParticipantsTitle': 'Notify Deal Participants',
+    'notifyDealParticipantsAudienceWarning':
+        'This message will only be sent to users who have placed an order for this deal.',
+    'notifyDealParticipantsSendUpdateTooltip': 'Send Update',
+    'notifyDealParticipantsSending': 'Sending...',
+    'notifyDealParticipantsNoParticipantsError':
+        'Cannot send: No users have joined this deal yet.',
+    'notifyDealParticipantsFailedToSend':
+        'Failed to send notification: {error}',
     'noInactiveMembers': 'No inactive members',
     'selectAll': 'Select all',
     'sendNotification': 'Send notification',
@@ -1469,6 +1494,9 @@ class EnglishFile {
     'notificationDealClosedTitle': 'Deal closed',
     'notificationDealClosedBody':
         'The deal "{0}" has been closed. It will no longer appear in active deals.',
+    'deal_closed_title': 'Deal Closed!',
+    'deal_closed_body':
+        "The deal '{0}' has been officially closed. Thank you for participating!",
     'notificationOrderStatusUpdatedTitle': 'Order status updated',
     'notificationOrderConfirmedBody':
         'Your order for "{0}" has been confirmed!',

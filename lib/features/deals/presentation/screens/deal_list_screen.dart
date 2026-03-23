@@ -109,8 +109,10 @@ class DealListController extends StateNotifier<AsyncValue<DealListPage>> {
           }
         }
 
-        _hasMore = page.items.length == page.limit &&
-            page.items.length < page.totalRows;
+        final snapshot = state.requireValue;
+        _hasMore = page.limit > 0 &&
+            page.items.length == page.limit &&
+            snapshot.items.length < snapshot.totalRows;
         if (_hasMore) {
           _currentPage++;
         }

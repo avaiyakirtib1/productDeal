@@ -21,6 +21,7 @@ class AppLanguages {
     'ur',
     'hi',
     'ru',
+    'uk',
   ];
 
   /// Default language when system locale does not match any supported language.
@@ -35,11 +36,11 @@ class AppLanguages {
     'ur': 'Urdu',
     'hi': 'Hindi',
     'ru': 'Russian',
+    'uk': 'Українська',
   };
 
   /// Locales for MaterialApp.supportedLocales.
-  static List<Locale> get supportedLocales =>
-      supportedCodes.map((c) => Locale(c)).toList();
+  static List<Locale> get supportedLocales => supportedCodes.map((c) => Locale(c)).toList();
 
   /// Content source languages for Create Product, Deal, Banner, Category.
   /// Same as [supportedCodes] - user selects the language they enter content in.
@@ -48,8 +49,7 @@ class AppLanguages {
   /// Display names for content source language (alias for [displayNames]).
   static const Map<String, String> contentLanguageNames = displayNames;
 
-  static bool isSupported(String languageCode) =>
-      supportedCodes.contains(languageCode);
+  static bool isSupported(String languageCode) => supportedCodes.contains(languageCode);
 }
 
 /// App language enum for language selection screen.
@@ -61,7 +61,8 @@ enum AppLanguage {
   arabic('ar', 'Arabic'),
   urdu('ur', 'Urdu'),
   hindi('hi', 'Hindi'),
-  russian('ru', 'Russian');
+  russian('ru', 'Russian'),
+  ukrainian('uk', 'Українська');
 
   final String code;
   final String displayName;

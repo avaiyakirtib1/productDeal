@@ -86,6 +86,10 @@ class HindiFile {
     'russian': 'रूसी',
     'sourceLanguageLabel': 'सामग्री की भाषा',
     'sourceLanguageHint': 'आपके द्वारा दर्ज किए गए पाठ की भाषा (अन्य भाषाओं में अनुवाद की जाएगी)',
+    'selectYourLanguage': 'अपनी भाषा चुनें',
+    'selectYourLanguageSubtitle':
+        'ऐप के लिए भाषा चुनें। आप इसे बाद में सेटिंग्स में बदल सकते हैं।',
+    'continueButton': 'जारी रखें',
     // ============================================
     // Common / General
     // ============================================
@@ -322,6 +326,17 @@ class HindiFile {
     'address': 'पता',
     'streetAddress': 'सड़क का पता',
     'addressWillBeGeocoded': 'निर्देशांक प्राप्त करने के लिए पता स्वचालित रूप से जियोकोड हो जाएगा',
+    'addressSearchHint': 'अपना पता खोजें',
+    'placesLookupFailed':
+        'सर्वर से पते का विवरण लोड नहीं हो सका। आप अपना पता मैन्युअल रूप से '
+        'टाइप या संपादित कर सकते हैं।',
+    'placesNoAddressResults':
+        'कोई पता नहीं मिला। कोई अन्य खोज आज़माएँ।',
+    'placesAddressSearchConfigError':
+        'पता खोज उपलब्ध नहीं है। अपना नेटवर्क जांचें और सुनिश्चित करें कि ऐप '
+        'सही API सर्वर (API_BASE_URL) का उपयोग करता है।',
+    'placesAddressSearchRequestFailed':
+        'पता खोज विफल रही। अपना कनेक्शन जांचें या बाद में पुनः प्रयास करें।',
     'getLocation': 'स्थान प्राप्त करें',
     'selectRole': 'भूमिका चुनें',
     'accountType': 'खाता प्रकार',
@@ -330,6 +345,7 @@ class HindiFile {
     'signIn': 'दाखिल करना',
     'registrationReceived': 'पंजीकरण प्राप्त हुआ! खाता स्वीकृत होने पर हम आपको सूचित करेंगे।',
     'fullNameRequired': 'पूरा नाम आवश्यक है',
+    'fullNameMinLength': 'पूरा नाम कम से कम 3 अक्षर का होना चाहिए',
     'emailRequired': 'ईमेल की जरूरत है',
     'provideValidEmail': 'एक वैध ईमेल प्रदान करें',
     'phoneNumberOptional': 'दूरभाष क्रमांक (वैकल्पिक)',
@@ -881,6 +897,15 @@ class HindiFile {
     'deselect': 'अचयनित',
     'recipients': 'प्राप्तकर्ता',
     'notificationSent': 'अधिसूचना भेजी गई',
+    'notifyDealParticipantsTitle': 'डील प्रतिभागियों को सूचित करें',
+    'notifyDealParticipantsAudienceWarning':
+        'यह संदेश केवल उन्हीं उपयोगकर्ताओं को भेजा जाएगा जिन्होंने इस डील के लिए ऑर्डर किया है।',
+    'notifyDealParticipantsSendUpdateTooltip': 'अपडेट भेजें',
+    'notifyDealParticipantsSending': 'भेजना...',
+    'notifyDealParticipantsNoParticipantsError':
+        'भेजना संभव नहीं: अभी तक कोई उपयोगकर्ता इस डील में शामिल नहीं हुआ है।',
+    'notifyDealParticipantsFailedToSend':
+        'सूचना भेजने में विफल: {error}',
     'noInactiveMembers': 'कोई निष्क्रिय सदस्य नहीं',
     'selectAll': 'सबका चयन करें',
     'sendNotification': 'अधिसूचना भेजें',
@@ -1270,6 +1295,9 @@ class HindiFile {
     'notificationDealSuccessBody': 'आपकी समूह डील "{0}" आवश्यक मात्रा तक पहुँच गई है और अब पुष्टि हो गई है। कृपया थोक विक्रेता के निर्देशों के अनुसार भुगतान और शिपिंग की तैयारी करें।',
     'notificationDealClosedTitle': 'डील बंद हो गई',
     'notificationDealClosedBody': 'डील "{0}" बंद कर दी गई है। यह अब सक्रिय डील्स में दिखाई नहीं देगी।',
+    'deal_closed_title': 'डील बंद हो गई!',
+    'deal_closed_body':
+        'डील "{0}" आधिकारिक रूप से बंद कर दी गई है। भाग लेने के लिए धन्यवाद!',
     'notificationOrderStatusUpdatedTitle': 'ऑर्डर स्थिति अपडेट हुई',
     'notificationOrderConfirmedBody': '"{0}" के लिए आपका ऑर्डर पुष्टि हो गया!',
     'notificationOrderDispatchedBody': '"{0}" के लिए आपका ऑर्डर डिस्पैच हो गया!',

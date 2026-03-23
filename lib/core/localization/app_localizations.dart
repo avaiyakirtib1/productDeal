@@ -7,6 +7,7 @@ import 'en_file.dart';
 import 'hi_file.dart';
 import 'ru_file.dart';
 import 'tr_file.dart';
+import 'uk_file.dart';
 import 'ur_file.dart';
 
 class AppLocalizations {
@@ -29,6 +30,7 @@ class AppLocalizations {
     'ur': UrduFile.urduTranslations,
     'hi': HindiFile.hindiTranslations,
     'ru': RussianFile.russianTranslations,
+    'uk': UkrainianFile.ukrainianTranslations,
   };
 
   String translate(String key) {
@@ -89,6 +91,10 @@ class AppLocalizations {
   String get loginAgain => translate('loginAgain');
   String get language => translate('language');
   String get languageSubtitle => translate('languageSubtitle');
+  String get selectYourLanguage => translate('selectYourLanguage');
+  String get selectYourLanguageSubtitle =>
+      translate('selectYourLanguageSubtitle');
+  String get continueButton => translate('continueButton');
   String get notificationSettings => translate('notificationSettings');
   String get notificationSettingsSubtitle =>
       translate('notificationSettingsSubtitle');
@@ -360,6 +366,7 @@ class AppLocalizations {
   String get createAccountSubtitle => translate('createAccountSubtitle');
   String get accountType => translate('accountType');
   String get fullNameRequired => translate('fullNameRequired');
+  String get fullNameMinLength => translate('fullNameMinLength');
   String get workEmail => translate('workEmail');
   String get emailRequired => translate('emailRequired');
   String get provideValidEmail => translate('provideValidEmail');
@@ -369,6 +376,13 @@ class AppLocalizations {
   String get companyName => translate('companyName');
   String get streetAddress => translate('streetAddress');
   String get addressWillBeGeocoded => translate('addressWillBeGeocoded');
+  String get addressSearchHint => translate('addressSearchHint');
+  String get placesLookupFailed => translate('placesLookupFailed');
+  String get placesNoAddressResults => translate('placesNoAddressResults');
+  String get placesAddressSearchConfigError =>
+      translate('placesAddressSearchConfigError');
+  String get placesAddressSearchRequestFailed =>
+      translate('placesAddressSearchRequestFailed');
   String get latitudeOptional => translate('latitudeOptional');
   String get longitudeOptional => translate('longitudeOptional');
   String get locating => translate('locating');
@@ -850,6 +864,18 @@ class AppLocalizations {
   String get deselect => translate('deselect');
   String get recipients => translate('recipients');
   String get notificationSent => translate('notificationSent');
+  String get notifyDealParticipantsTitle =>
+      translate('notifyDealParticipantsTitle');
+  String get notifyDealParticipantsAudienceWarning =>
+      translate('notifyDealParticipantsAudienceWarning');
+  String get notifyDealParticipantsSendUpdateTooltip =>
+      translate('notifyDealParticipantsSendUpdateTooltip');
+  String get notifyDealParticipantsSending =>
+      translate('notifyDealParticipantsSending');
+  String get notifyDealParticipantsNoParticipantsError =>
+      translate('notifyDealParticipantsNoParticipantsError');
+  String get notifyDealParticipantsFailedToSend =>
+      translate('notifyDealParticipantsFailedToSend');
   String get noInactiveMembers => translate('noInactiveMembers');
   String get selectAll => translate('selectAll');
   String get sendNotification => translate('sendNotification');

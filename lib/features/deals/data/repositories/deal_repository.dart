@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/networking/api_client.dart';
+import '../deal_list_page_parse.dart';
 import '../models/deal_models.dart';
 
 class DealRepository {
@@ -37,7 +38,15 @@ class DealRepository {
         queryParameters: query,
       );
 
-      return DealListPage.fromJson(response.data ?? const {});
+      final body = Map<String, dynamic>.from(response.data ?? const {});
+      final raw = body['data'];
+      final count = raw is List ? raw.length : 0;
+      debugPrint('Fetched Deals Count: $count');
+
+      if (count >= 12) {
+        return compute(parseDealListPageIsolate, body);
+      }
+      return DealListPage.fromJson(body);
     } on DioException catch (error) {
       debugPrint('DealListPage error: ${error.response?.data}');
       throw mapDioException(error);

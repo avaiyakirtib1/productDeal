@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/localization/app_localizations.dart';
+import '../../../../core/media/dashboard_image_url.dart';
 import '../../data/models/dashboard_models.dart';
 
 class CategoryChips extends StatelessWidget {
@@ -58,9 +59,11 @@ class CategoryChips extends StatelessWidget {
               final category = categories[index];
               final cs = Theme.of(context).colorScheme;
 
-              return GestureDetector(
-                onTap: () => onCategoryTap(category),
-                child: Container(
+              return MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () => onCategoryTap(category),
+                  child: Container(
                   width: 150, // Fixed width for consistency
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -90,7 +93,10 @@ class CategoryChips extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: CachedNetworkImage(
-                            imageUrl: category.imageUrl,
+                            imageUrl: dashboardListImageUrl(
+                              category.imageUrl,
+                              maxWidth: 200,
+                            ),
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Center(
                               child: Icon(
@@ -145,6 +151,7 @@ class CategoryChips extends StatelessWidget {
                       ),
                     ],
                   ),
+                ),
                 ),
               );
             },

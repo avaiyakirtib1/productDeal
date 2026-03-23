@@ -1,3 +1,4 @@
+import 'dart:math' show min;
 import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -476,8 +477,8 @@ class _BannerFormState extends ConsumerState<BannerForm> {
               TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
-                  labelText: l10n?.descriptionOptional,
-                  hintText: l10n?.enterBannerDescription,
+                  labelText: l10n.descriptionOptional,
+                  hintText: l10n.enterBannerDescription,
                   prefixIcon: const Icon(Icons.description),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -493,7 +494,7 @@ class _BannerFormState extends ConsumerState<BannerForm> {
               DropdownButtonFormField<BannerType>(
                 initialValue: _selectedType,
                 decoration: InputDecoration(
-                  labelText: l10n?.bannerType,
+                  labelText: l10n.bannerType,
                   prefixIcon: const Icon(Icons.category),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -528,7 +529,7 @@ class _BannerFormState extends ConsumerState<BannerForm> {
               if (_selectedType == BannerType.external) ...[
                 TextFormField(
                   controller: _targetUrlController,
-                  decoration: InputDecoration(labelText: l10n?.targetUrl),
+                  decoration: InputDecoration(labelText: l10n.targetUrl),
                   validator: (v) => v?.isEmpty == true ? l10n.required : null,
                 ),
                 const SizedBox(height: 20),
@@ -537,7 +538,7 @@ class _BannerFormState extends ConsumerState<BannerForm> {
                 TextFormField(
                   readOnly: true,
                   decoration: InputDecoration(
-                    labelText: l10n?.selectProduct,
+                    labelText: l10n.selectProduct,
                     border: const OutlineInputBorder(),
                     suffixIcon: const Icon(Icons.arrow_drop_down),
                     helperText: 'Tap to select a product',
@@ -589,7 +590,7 @@ class _BannerFormState extends ConsumerState<BannerForm> {
                 TextFormField(
                   readOnly: true,
                   decoration: InputDecoration(
-                    labelText: l10n?.selectDeal,
+                    labelText: l10n.selectDeal,
                     border: const OutlineInputBorder(),
                     suffixIcon: const Icon(Icons.arrow_drop_down),
                     helperText: 'Tap to select a deal',
@@ -645,7 +646,7 @@ class _BannerFormState extends ConsumerState<BannerForm> {
                   // ignore: deprecated_member_use - value needed for controlled dropdown
                   value: _selectedStatus,
                   decoration: InputDecoration(
-                    labelText: l10n?.status,
+                    labelText: l10n.status,
                     prefixIcon: const Icon(Icons.flag),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -732,7 +733,11 @@ class _BannerFormState extends ConsumerState<BannerForm> {
               Row(
                 children: [
                   OutlinedButton.icon(
-                    onPressed: () => _showPreviewModal(context),
+                    onPressed: (_isSubmitting ||
+                            _uploadingWebImage ||
+                            _uploadingMobileImage)
+                        ? null
+                        : () => _showPreviewModal(context),
                     icon: const Icon(Icons.visibility_outlined),
                     label: Text(l10n.preview),
                     style: OutlinedButton.styleFrom(
@@ -746,7 +751,11 @@ class _BannerFormState extends ConsumerState<BannerForm> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: FilledButton(
-                      onPressed: _isSubmitting ? null : _submit,
+                      onPressed: (_isSubmitting ||
+                              _uploadingWebImage ||
+                              _uploadingMobileImage)
+                          ? null
+                          : _submit,
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -803,20 +812,17 @@ class _BannerFormState extends ConsumerState<BannerForm> {
       final uploadService = ref.read(uploadServiceProvider);
       final imageData = await ImagePickerHelper.pickImage();
       if (imageData == null) {
-        setState(() => _uploadingWebImage = false);
         return;
       }
+      if (!mounted) return;
       setState(() => _selectedWebImageData = imageData);
       final url = await uploadService.uploadFile(
         fileData: imageData,
         folder: 'banners',
       );
-      setState(() {
-        _webImageUrl = url;
-        _uploadingWebImage = false;
-      });
+      if (!mounted) return;
+      setState(() => _webImageUrl = url);
     } catch (e) {
-      setState(() => _uploadingWebImage = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -826,6 +832,10 @@ class _BannerFormState extends ConsumerState<BannerForm> {
             backgroundColor: Colors.red,
           ),
         );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _uploadingWebImage = false);
       }
     }
   }
@@ -836,20 +846,17 @@ class _BannerFormState extends ConsumerState<BannerForm> {
       final uploadService = ref.read(uploadServiceProvider);
       final imageData = await ImagePickerHelper.pickImage();
       if (imageData == null) {
-        setState(() => _uploadingMobileImage = false);
         return;
       }
+      if (!mounted) return;
       setState(() => _selectedMobileImageData = imageData);
       final url = await uploadService.uploadFile(
         fileData: imageData,
         folder: 'banners',
       );
-      setState(() {
-        _mobileImageUrl = url;
-        _uploadingMobileImage = false;
-      });
+      if (!mounted) return;
+      setState(() => _mobileImageUrl = url);
     } catch (e) {
-      setState(() => _uploadingMobileImage = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -860,10 +867,41 @@ class _BannerFormState extends ConsumerState<BannerForm> {
           ),
         );
       }
+    } finally {
+      if (mounted) {
+        setState(() => _uploadingMobileImage = false);
+      }
     }
   }
 
   Future<void> _submit() async {
+    if (_uploadingWebImage || _uploadingMobileImage) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please wait for the image to finish uploading.'),
+        ),
+      );
+      return;
+    }
+
+    final webOk = _webImageUrl != null && _webImageUrl!.isNotEmpty;
+    final mobileOk = _mobileImageUrl != null && _mobileImageUrl!.isNotEmpty;
+    if (!webOk || !mobileOk) {
+      final pickedButMissingUrl = (_selectedWebImageData != null && !webOk) ||
+          (_selectedMobileImageData != null && !mobileOk);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            pickedButMissingUrl
+                ? 'Image upload failed. Please try again.'
+                : 'Please upload both images before submitting.',
+          ),
+          backgroundColor: pickedButMissingUrl ? Colors.red : null,
+        ),
+      );
+      return;
+    }
+
     if (_formKey.currentState!.validate() && !_isSubmitting) {
       setState(() {
         _isSubmitting = true;
@@ -1198,81 +1236,120 @@ class _BannerPreviewDialogState extends ConsumerState<_BannerPreviewDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final device = ref.watch(_previewDeviceProvider);
     final isMobile = device == PreviewDevice.mobile;
     final imageUrl = isMobile ? widget.mobileImageUrl : widget.webImageUrl;
     final imageData = isMobile ? widget.mobileImageData : widget.webImageData;
 
-    return AlertDialog(
-      title: Text(l10n.mobilePreview),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Device toggle
-            SegmentedButton<PreviewDevice>(
-              segments: [
-                ButtonSegment<PreviewDevice>(
-                  value: PreviewDevice.mobile,
-                  icon: const Icon(Icons.smartphone),
-                  label: Text(l10n.platformMobile),
-                ),
-                ButtonSegment<PreviewDevice>(
-                  value: PreviewDevice.web,
-                  icon: const Icon(Icons.web),
-                  label: Text(l10n.platformWeb),
-                ),
-              ],
-              selected: {device},
-              onSelectionChanged: (Set<PreviewDevice> selected) {
-                if (selected.isEmpty) return;
-                ref.read(_previewDeviceProvider.notifier).state =
-                    selected.first;
-                setState(() {});
-              },
-            ),
-            const SizedBox(height: 20),
-            // Frame: mobile ~375px or web ~1000px
-            Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: isMobile ? 375 : 1000,
-                ),
-                child: _BannerPreviewContent(
-                  isMobilePreview: isMobile,
-                  title: widget.title,
-                  description: widget.description,
-                  imageUrl: imageUrl,
-                  imageData: imageData,
+    final screenW = MediaQuery.sizeOf(context).width;
+    const outerInset = 16.0;
+    const innerHPad = 24.0;
+    final maxPreviewW = screenW - (outerInset * 2) - (innerHPad * 2);
+    final capW = isMobile ? 375.0 : 1000.0;
+    final previewWidth = min(capW, maxPreviewW).clamp(160.0, 2000.0);
+    return Dialog(
+      insetPadding: const EdgeInsets.all(outerInset),
+      child: Container(
+        constraints: BoxConstraints(
+          maxWidth: min(screenW - outerInset * 2, 1048.0),
+        ),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
+          ),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(
+            innerHPad,
+            8,
+            innerHPad,
+            innerHPad,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        l10n.mobilePreview,
+                        style: theme.textTheme.titleLarge,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    tooltip: l10n.close,
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              SegmentedButton<PreviewDevice>(
+                segments: [
+                  ButtonSegment<PreviewDevice>(
+                    value: PreviewDevice.mobile,
+                    icon: const Icon(Icons.smartphone),
+                    label: Text(l10n.platformMobile),
+                  ),
+                  ButtonSegment<PreviewDevice>(
+                    value: PreviewDevice.web,
+                    icon: const Icon(Icons.web),
+                    label: Text(l10n.platformWeb),
+                  ),
+                ],
+                selected: {device},
+                onSelectionChanged: (Set<PreviewDevice> selected) {
+                  if (selected.isEmpty) return;
+                  ref.read(_previewDeviceProvider.notifier).state =
+                      selected.first;
+                },
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  width: previewWidth,
+                  child: _BannerPreviewContent(
+                    device: device,
+                    title: widget.title,
+                    description: widget.description,
+                    imageUrl: imageUrl,
+                    imageData: imageData,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(l10n.close),
-        ),
-      ],
     );
   }
 }
 
-/// Banner preview content matching the home page carousel: same borderRadius,
-/// gradient overlay, title/description styling, and 16:9 image area.
+/// Banner preview: mobile uses 2:1, web uses 21:9; matches carousel treatment.
 class _BannerPreviewContent extends StatelessWidget {
   const _BannerPreviewContent({
-    required this.isMobilePreview,
+    required this.device,
     required this.title,
     required this.description,
     this.imageUrl,
     this.imageData,
   });
 
-  final bool isMobilePreview;
+  static const double mobileAspect = 2 / 1;
+  static const double webAspect = 21 / 9;
+
+  final PreviewDevice device;
   final String title;
   final String description;
   final String? imageUrl;
@@ -1281,7 +1358,13 @@ class _BannerPreviewContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final aspectRatio = isMobilePreview ? 1.0 : (16 / 9);
+    final isMobile = device == PreviewDevice.mobile;
+    final titleSize = isMobile ? 17.0 : 19.0;
+    final bodySize = isMobile ? 12.5 : 13.5;
+    final bottomPad = isMobile ? 14.0 : 16.0;
+    final horizontalPad = isMobile ? 14.0 : 18.0;
+
+    final aspectRatio = isMobile ? mobileAspect : webAspect;
 
     return AspectRatio(
       aspectRatio: aspectRatio,
@@ -1308,7 +1391,6 @@ class _BannerPreviewContent extends StatelessWidget {
                 placeholderBuilder: () => _imagePlaceholder(context, l10n),
               ),
             ),
-            // Gradient overlay (same as banner_carousel)
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
@@ -1316,45 +1398,65 @@ class _BannerPreviewContent extends StatelessWidget {
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   colors: [
-                    Colors.black.withValues(alpha: 0.7),
-                    Colors.black.withValues(alpha: 0.4),
+                    Colors.black.withValues(alpha: 0.75),
+                    Colors.black.withValues(alpha: 0.45),
                     Colors.transparent,
                   ],
+                  stops: const [0.0, 0.45, 1.0],
                 ),
               ),
             ),
-            // Title and description (same styles as banner_carousel)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title.isEmpty ? l10n.enterBannerTitle : title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    if (description.isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        description,
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.9),
-                          fontSize: 13.0,
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  horizontalPad,
+                  12,
+                  horizontalPad,
+                  bottomPad,
+                ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final maxTextW = constraints.maxWidth;
+                    return Align(
+                      alignment: Alignment.bottomLeft,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: maxTextW),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title.isEmpty ? l10n.enterBannerTitle : title,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: titleSize,
+                                fontWeight: FontWeight.bold,
+                                height: 1.2,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            if (description.isNotEmpty) ...[
+                              SizedBox(height: isMobile ? 3 : 4),
+                              Text(
+                                description,
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.92),
+                                  fontSize: bodySize,
+                                  height: 1.25,
+                                ),
+                                maxLines: isMobile ? 2 : 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ],
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ],
-                  ],
+                    );
+                  },
                 ),
               ),
             ),

@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/controllers/auth_controller.dart';
 import '../permissions/permissions.dart';
+import '../media/dashboard_image_url.dart';
 import '../../features/dashboard/data/repositories/banner_repository.dart';
 import '../../features/dashboard/domain/models/banner_model.dart';
 import '../../features/dashboard/presentation/controllers/banner_controller.dart';
@@ -53,6 +54,10 @@ class BannerCarousel extends ConsumerWidget {
                 return Builder(
                   builder: (BuildContext context) {
                     final hasTarget = _hasTarget(banner);
+                    final bannerImageUrl = dashboardListImageUrl(
+                      banner.displayImageUrl,
+                      maxWidth: 960,
+                    );
                     return GestureDetector(
                       onTap: hasTarget
                           ? () => _handleBannerTap(context, banner)
@@ -64,7 +69,8 @@ class BannerCarousel extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12.0),
                           image: DecorationImage(
                             image: CachedNetworkImageProvider(
-                                banner.displayImageUrl),
+                              bannerImageUrl,
+                            ),
                             fit: BoxFit.cover,
                           ),
                           boxShadow: hasTarget

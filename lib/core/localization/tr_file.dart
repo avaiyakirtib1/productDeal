@@ -86,6 +86,10 @@ class TurkishFile {
     'russian': 'Rusça',
     'sourceLanguageLabel': 'İçerik dili',
     'sourceLanguageHint': 'Girdiğiniz metnin dili (diğer dillere çevrilecektir)',
+    'selectYourLanguage': 'Dilinizi seçin',
+    'selectYourLanguageSubtitle':
+        'Uygulama dilini seçin. Daha sonra ayarlardan değiştirebilirsiniz.',
+    'continueButton': 'Devam',
     // ============================================
     // Common / General
     // ============================================
@@ -322,6 +326,18 @@ class TurkishFile {
     'address': 'Adres',
     'streetAddress': 'Açık adres',
     'addressWillBeGeocoded': 'Koordinatların alınması için adres otomatik olarak coğrafi kodlanacak',
+    'addressSearchHint': 'Adresinizi arayın',
+    'placesLookupFailed':
+        'Adres ayrıntıları sunucudan yüklenemedi. Adresinizi elle yazabilir veya '
+        'düzenleyebilirsiniz.',
+    'placesNoAddressResults':
+        'Adres bulunamadı. Farklı bir arama deneyin.',
+    'placesAddressSearchConfigError':
+        'Adres araması kullanılamıyor. Ağınızı kontrol edin ve uygulamanın doğru '
+        'API sunucusunu (API_BASE_URL) kullandığından emin olun.',
+    'placesAddressSearchRequestFailed':
+        'Adres araması başarısız. Bağlantınızı kontrol edin veya daha sonra tekrar '
+        'deneyin.',
     'getLocation': 'Konumu Al',
     'selectRole': 'Rol Seçin',
     'accountType': 'Hesap türü',
@@ -330,6 +346,7 @@ class TurkishFile {
     'signIn': 'Oturum aç',
     'registrationReceived': 'Kayıt alındı! Hesap onaylandığında sizi bilgilendireceğiz.',
     'fullNameRequired': 'Tam ad gerekli',
+    'fullNameMinLength': 'Tam ad en az 3 karakter olmalıdır',
     'emailRequired': 'E-posta gerekli',
     'provideValidEmail': 'Geçerli bir e-posta sağlayın',
     'phoneNumberOptional': 'Telefon numarası (isteğe bağlı)',
@@ -881,6 +898,15 @@ class TurkishFile {
     'deselect': 'Seçimi kaldır',
     'recipients': 'Alıcılar',
     'notificationSent': 'Bildirim gönderildi',
+    'notifyDealParticipantsTitle': 'İşlem katılımcılarını bilgilendir',
+    'notifyDealParticipantsAudienceWarning':
+        'Bu mesaj yalnızca bu anlaşma için sipariş veren kullanıcılara gönderilecektir.',
+    'notifyDealParticipantsSendUpdateTooltip': 'Güncelleme gönder',
+    'notifyDealParticipantsSending': 'Gönderiliyor...',
+    'notifyDealParticipantsNoParticipantsError':
+        'Gönderilemedi: Bu anlaşmaya henüz kimse katılmadı.',
+    'notifyDealParticipantsFailedToSend':
+        'Bildirim gönderilemedi: {error}',
     'noInactiveMembers': 'Aktif olmayan üye yok',
     'selectAll': 'Tümünü seç',
     'sendNotification': 'Bildirim gönder',
@@ -1270,6 +1296,9 @@ class TurkishFile {
     'notificationDealSuccessBody': 'Grup fırsatınız "{0}" gerekli miktara ulaştı ve artık onaylandı. Lütfen toptancının talimatlarına göre ödeme ve kargoya hazırlanın.',
     'notificationDealClosedTitle': 'Fırsat kapatıldı',
     'notificationDealClosedBody': '"{0}" fırsatı kapatıldı. Artık aktif fırsatlarda görünmeyecek.',
+    'deal_closed_title': 'Fırsat kapatıldı!',
+    'deal_closed_body':
+        '"{0}" fırsatı resmen kapatıldı. Katılımınız için teşekkürler!',
     'notificationOrderStatusUpdatedTitle': 'Sipariş Durumu Güncellendi',
     'notificationOrderConfirmedBody': '"{0}" için siparişiniz onaylandı!',
     'notificationOrderDispatchedBody': '"{0}" için siparişiniz gönderildi!',

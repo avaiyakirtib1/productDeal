@@ -1,5 +1,5 @@
-// ignore: unused_import - used on non-web platforms
-import 'dart:io' if (dart.library.html) '';
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../networking/api_client.dart';
 import '../utils/file_utils.dart'
     if (dart.library.html) '../utils/file_utils_stub.dart';
+import 'upload_io.dart' if (dart.library.html) 'upload_io_stub.dart';
 
 // Type alias for File that works on both platforms
 // On web, this will be dynamic, on mobile it will be File from dart:io
@@ -46,6 +47,78 @@ class UploadService {
   UploadService(this._dio);
 
   final Dio _dio;
+
+  static String _guessImageContentType(String filename) {
+    final lower = filename.toLowerCase();
+    if (lower.endsWith('.png')) return 'image/png';
+    if (lower.endsWith('.webp')) return 'image/webp';
+    if (lower.endsWith('.gif')) return 'image/gif';
+    if (lower.endsWith('.heic') || lower.endsWith('.heif')) {
+      return 'image/heic';
+    }
+    return 'image/jpeg';
+  }
+
+  Future<Uint8List> _readUploadBytes({
+    required PickedFileData? fileData,
+    required PlatformFile? file,
+  }) async {
+    if (fileData != null) {
+      if (fileData.isWeb) {
+        return Uint8List.fromList(fileData.bytes!);
+      }
+      return readUploadBytesFromIoFile(fileData.fileAsFile);
+    }
+    if (file != null && !kIsWeb) {
+      // ignore: avoid_dynamic_calls
+      final fPath = (file as dynamic).path as String;
+      return readUploadBytesFromPath(fPath);
+    }
+    throw Exception('Either file or fileData must be provided');
+  }
+
+  /// Client → Supabase signed URL (bypasses Vercel multipart proxy).
+  Future<String> _uploadViaPresignedUrl({
+    required Uint8List bytes,
+    required String fileName,
+    required String folder,
+    required String contentType,
+  }) async {
+    final presigned = await getPresignedUrl(
+      filename: fileName,
+      contentType: contentType,
+      folder: folder,
+    );
+    final uploadUrl = presigned['uploadUrl'] as String?;
+    final publicUrl = presigned['publicUrl'] as String?;
+    if (uploadUrl == null || uploadUrl.isEmpty) {
+      throw Exception('Presigned upload: missing uploadUrl');
+    }
+    if (publicUrl == null || publicUrl.isEmpty) {
+      throw Exception('Presigned upload: missing publicUrl');
+    }
+
+    // Do not use [_dio]: ApiClient injects Authorization + `lang` on every request,
+    // which breaks Supabase signed URLs and can cause upload failures.
+    final direct = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 60),
+        sendTimeout: kIsWeb ? null : const Duration(seconds: 30),
+      ),
+    );
+    await direct.put<void>(
+      uploadUrl,
+      data: bytes,
+      options: Options(
+        headers: <String, dynamic>{
+          Headers.contentTypeHeader: contentType,
+        },
+        validateStatus: (s) => s != null && s >= 200 && s < 300,
+      ),
+    );
+    return publicUrl;
+  }
 
   /// Upload a file directly to the server
   /// Returns the public URL of the uploaded file
@@ -95,16 +168,34 @@ class UploadService {
         'folder': folder,
       });
 
-      final response = await _dio.post<Map<String, dynamic>>(
-        '/upload',
-        data: formData,
-      );
+      try {
+        final response = await _dio.post<Map<String, dynamic>>(
+          '/upload',
+          data: formData,
+        );
 
-      final url = response.data?['data']?['url'] as String?;
-      if (url == null) {
-        throw Exception('Upload failed: No URL returned');
+        final url = response.data?['data']?['url'] as String?;
+        if (url == null) {
+          throw Exception('Upload failed: No URL returned');
+        }
+        return url;
+      } on DioException catch (e) {
+        final code = e.response?.statusCode;
+        if (code == 500 || code == 502 || code == 503) {
+          final bytes = await _readUploadBytes(
+            fileData: fileData,
+            file: file,
+          );
+          final ct = _guessImageContentType(fileName);
+          return _uploadViaPresignedUrl(
+            bytes: bytes,
+            fileName: fileName,
+            folder: folder,
+            contentType: ct,
+          );
+        }
+        rethrow;
       }
-      return url;
     } catch (e) {
       throw Exception('Failed to upload file: $e');
     }

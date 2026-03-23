@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AppConfig {
-  const AppConfig({required this.apiBaseUrl});
+  const AppConfig({
+    required this.apiBaseUrl,
+  });
 
   final String apiBaseUrl;
 
@@ -20,6 +22,8 @@ class AppConfig {
 }
 
 final appConfigProvider = Provider<AppConfig>(
-  (ref) => const AppConfig(apiBaseUrl: AppConfig.defaultBaseUrl),
+  (ref) => AppConfig(
+    apiBaseUrl: AppConfig.defaultBaseUrl,
+  ),
   name: 'AppConfigProvider',
 );

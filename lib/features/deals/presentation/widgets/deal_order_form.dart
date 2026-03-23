@@ -29,6 +29,8 @@ class _DealOrderFormState extends ConsumerState<DealOrderForm> {
   final _quantityController = TextEditingController();
   final _notesController = TextEditingController();
   bool _isSubmitting = false;
+  /// Synchronous guard so two taps cannot start two requests before the first frame rebuilds.
+  bool _placementLocked = false;
   double? _sliderValue;
 
   @override
@@ -104,6 +106,8 @@ class _DealOrderFormState extends ConsumerState<DealOrderForm> {
       return;
     }
 
+    if (_placementLocked) return;
+    _placementLocked = true;
     setState(() => _isSubmitting = true);
 
     try {
@@ -116,20 +120,24 @@ class _DealOrderFormState extends ConsumerState<DealOrderForm> {
             : _notesController.text.trim(),
       );
 
-      if (mounted) {
-        SnackbarUtils.showSuccess(
-          context,
-          AppLocalizations.of(context)?.orderPlacedSuccessfully ??
-              'Order placed successfully!',
-        );
-        // Clear form
-        _notesController.clear();
-        _quantityController.text = widget.deal.minOrderQuantity.toString();
-        _sliderValue = widget.deal.minOrderQuantity.toDouble();
+      if (!mounted) return;
 
-        // Notify parent (if callback provided) without causing rebuild
+      SnackbarUtils.showSuccess(
+        context,
+        AppLocalizations.of(context)?.orderPlacedSuccessfully ??
+            'Order placed successfully!',
+        duration: const Duration(seconds: 4),
+      );
+
+      // Clear form immediately; refresh deal/providers after this frame so UI feels instant.
+      _notesController.clear();
+      _quantityController.text = widget.deal.minOrderQuantity.toString();
+      _sliderValue = widget.deal.minOrderQuantity.toDouble();
+
+      Future.microtask(() {
+        if (!mounted) return;
         widget.onOrderPlaced?.call();
-      }
+      });
     } catch (e) {
       debugPrint('Error: $e');
       if (mounted) {
@@ -140,6 +148,7 @@ class _DealOrderFormState extends ConsumerState<DealOrderForm> {
         SnackbarUtils.showError(context, message);
       }
     } finally {
+      _placementLocked = false;
       if (mounted) {
         setState(() => _isSubmitting = false);
       }
@@ -399,10 +408,9 @@ class _DealOrderFormState extends ConsumerState<DealOrderForm> {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: () async {
-                    if (_isSubmitting) return;
-                    _submit();
-                  },
+                  onPressed: (_isSubmitting || _placementLocked)
+                      ? null
+                      : _submit,
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
