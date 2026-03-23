@@ -1549,5 +1549,18 @@ class EnglishFile {
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
     'kioskShopRole': 'Kiosk / Shop',
+    'legalDocumentsTitle': 'Legal Documents',
+    'readAndAcceptAgbPrefix': 'I have read and accept the ',
+    'agbLinkText': 'Terms and Conditions (AGB)',
+    'readAndAcceptAgbSuffix': '.',
+    'acceptCompliancePrefix': 'I accept the ',
+    'complianceLinkText': 'Compliance Guidelines (Trademark & Product Integrity)',
+    'acceptComplianceSuffix': '.',
+    'agreePrivacyPrefix': 'I agree to the ',
+    'privacyLinkText': 'Privacy Policy',
+    'agreePrivacySuffix': ' and data transmission.',
+    'confirmFrameworkPrefix': 'I confirm that I have read the ',
+    'frameworkLinkText': 'Framework Agreement for using the App',
+    'confirmFrameworkSuffix': '.',
   };
 }

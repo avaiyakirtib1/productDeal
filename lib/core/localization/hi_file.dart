@@ -1329,5 +1329,18 @@ class HindiFile {
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
     'kioskShopRole': 'कियोस्क / दुकान',
+    'legalDocumentsTitle': 'कानूनी दस्तावेज़',
+    'readAndAcceptAgbPrefix': 'मैंने पढ़ लिया है और मैं स्वीकार करता हूँ ',
+    'agbLinkText': 'नियम और शर्तें (AGB)',
+    'readAndAcceptAgbSuffix': '।',
+    'acceptCompliancePrefix': 'मैं स्वीकार करता हूँ ',
+    'complianceLinkText': 'अनुपालन दिशानिर्देश (ट्रेडमार्क और उत्पाद अखंडता)',
+    'acceptComplianceSuffix': '।',
+    'agreePrivacyPrefix': 'मैं सहमत हूँ ',
+    'privacyLinkText': 'गोपनीयता नीति',
+    'agreePrivacySuffix': ' और डेटा ट्रांसमिशन से।',
+    'confirmFrameworkPrefix': 'मैं पुष्टि करता हूँ कि मैंने पढ़ लिया है ',
+    'frameworkLinkText': 'ऐप के उपयोग के लिए फ्रेमवर्क समझौता',
+    'confirmFrameworkSuffix': '।',
   };
 }

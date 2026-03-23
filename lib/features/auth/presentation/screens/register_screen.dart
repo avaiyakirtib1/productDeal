@@ -564,7 +564,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       // Legal: Wholesaler = "Rechtliche Dokumente" (4 docs); Kiosk = simple T&C + Privacy
                       if (_role == UserRole.wholesaler) ...[
                         Text(
-                          'Rechtliche Dokumente',
+                          l10n?.legalDocumentsTitle ?? 'Rechtliche Dokumente',
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium
@@ -578,9 +578,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               : (v) =>
                                   setState(() => _agbAccepted = v ?? false),
                           onTapLink: () => LegalDocumentViewer.showAgb(context),
-                          label: 'Ich habe die ',
-                          linkText: 'Allgemeinen Geschäftsbedingungen (AGB)',
-                          labelSuffix: ' gelesen und akzeptiere diese.',
+                          label: l10n?.readAndAcceptAgbPrefix ?? 'Ich habe die ',
+                          linkText: l10n?.agbLinkText ?? 'Allgemeinen Geschäftsbedingungen (AGB)',
+                          labelSuffix: l10n?.readAndAcceptAgbSuffix ?? ' gelesen und akzeptiere diese.',
                         ),
                         _LegalCheckboxWithLink(
                           value: _complianceAccepted,
@@ -590,10 +590,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   () => _complianceAccepted = v ?? false),
                           onTapLink: () =>
                               LegalDocumentViewer.showCompliance(context),
-                          label: 'Ich akzeptiere die ',
-                          linkText:
-                              'Compliance-Richtlinie (Markenrecht & Produktintegrität)',
-                          labelSuffix: '.',
+                          label: l10n?.acceptCompliancePrefix ?? 'Ich akzeptiere die ',
+                          linkText: l10n?.complianceLinkText ?? 'Compliance-Richtlinie (Markenrecht & Produktintegrität)',
+                          labelSuffix: l10n?.acceptComplianceSuffix ?? '.',
                         ),
                         _LegalCheckboxWithLink(
                           value: _privacyLegalAccepted,
@@ -603,9 +602,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   () => _privacyLegalAccepted = v ?? false),
                           onTapLink: () =>
                               LegalDocumentViewer.showPrivacy(context),
-                          label: 'Ich stimme der ',
-                          linkText: 'Datenschutzerklärung',
-                          labelSuffix: ' und Datenübermittlung zu.',
+                          label: l10n?.agreePrivacyPrefix ?? 'Ich stimme der ',
+                          linkText: l10n?.privacyLinkText ?? 'Datenschutzerklärung',
+                          labelSuffix: l10n?.agreePrivacySuffix ?? ' und Datenübermittlung zu.',
                         ),
                         CheckboxListTile(
                           value: _frameworkContractAccepted,
@@ -628,10 +627,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                           .onSurface,
                                     ),
                                 children: [
-                                  const TextSpan(
-                                      text: 'Ich bestätige, dass ich den '),
                                   TextSpan(
-                                    text: 'Rahmenvertrag zur Nutzung der App',
+                                      text: l10n?.confirmFrameworkPrefix ?? 'Ich bestätige, dass ich den '),
+                                  TextSpan(
+                                    text: l10n?.frameworkLinkText ?? 'Rahmenvertrag zur Nutzung der App',
                                     style: TextStyle(
                                       color:
                                           Theme.of(context).colorScheme.primary,
@@ -639,7 +638,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  const TextSpan(text: ' gelesen habe.'),
+                                  TextSpan(text: l10n?.confirmFrameworkSuffix ?? ' gelesen habe.'),
                                 ],
                               ),
                             ),
@@ -648,7 +647,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       ] else ...[
                         // Kiosk: AGB + Data Privacy (same document display as wholesaler)
                         Text(
-                          'Rechtliche Dokumente',
+                          l10n?.legalDocumentsTitle ?? 'Rechtliche Dokumente',
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium
@@ -662,9 +661,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               : (v) =>
                                   setState(() => _termsAccepted = v ?? false),
                           onTapLink: () => LegalDocumentViewer.showAgb(context),
-                          label: 'Ich habe die ',
-                          linkText: 'Allgemeinen Geschäftsbedingungen (AGB)',
-                          labelSuffix: ' gelesen und akzeptiere diese.',
+                          label: l10n?.readAndAcceptAgbPrefix ?? 'Ich habe die ',
+                          linkText: l10n?.agbLinkText ?? 'Allgemeinen Geschäftsbedingungen (AGB)',
+                          labelSuffix: l10n?.readAndAcceptAgbSuffix ?? ' gelesen und akzeptiere diese.',
                         ),
                         _LegalCheckboxWithLink(
                           value: _privacyAccepted,
@@ -674,9 +673,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   setState(() => _privacyAccepted = v ?? false),
                           onTapLink: () =>
                               LegalDocumentViewer.showPrivacy(context),
-                          label: 'Ich stimme der ',
-                          linkText: 'Datenschutzerklärung',
-                          labelSuffix: ' und Datenübermittlung zu.',
+                          label: l10n?.agreePrivacyPrefix ?? 'Ich stimme der ',
+                          linkText: l10n?.privacyLinkText ?? 'Datenschutzerklärung',
+                          labelSuffix: l10n?.agreePrivacySuffix ?? ' und Datenübermittlung zu.',
                         ),
                       ],
                       const SizedBox(height: 24),

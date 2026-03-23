@@ -1330,5 +1330,18 @@ class TurkishFile {
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
     'kioskShopRole': 'Büfe / Dükkan',
+    'legalDocumentsTitle': 'Yasal Belgeler',
+    'readAndAcceptAgbPrefix': 'Şu belgeyi okudum ve kabul ediyorum: ',
+    'agbLinkText': 'Genel Hükümler ve Koşullar (GHK)',
+    'readAndAcceptAgbSuffix': '.',
+    'acceptCompliancePrefix': 'Şu belgeyi kabul ediyorum: ',
+    'complianceLinkText': 'Uyumluluk Yönergeleri (Ticari Marka ve Ürün Bütünlüğü)',
+    'acceptComplianceSuffix': '.',
+    'agreePrivacyPrefix': 'Şu belgeyi kabul ediyorum: ',
+    'privacyLinkText': 'Gizlilik Politikası',
+    'agreePrivacySuffix': ' ve veri aktarımını.',
+    'confirmFrameworkPrefix': 'Şu belgeyi okuduğumu onaylıyorum: ',
+    'frameworkLinkText': 'Uygulama Kullanımı Çerçeve Sözleşmesi',
+    'confirmFrameworkSuffix': '.',
   };
 }

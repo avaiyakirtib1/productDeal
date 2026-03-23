@@ -1351,6 +1351,21 @@ class AppLocalizations {
       translate('paymentEmailPlaceholdersSubject');
   String get paymentEmailPlaceholdersBody =>
       translate('paymentEmailPlaceholdersBody');
+  // Legal Terms
+  String get legalDocumentsTitle => translate('legalDocumentsTitle');
+  String get readAndAcceptAgbPrefix => translate('readAndAcceptAgbPrefix');
+  String get agbLinkText => translate('agbLinkText');
+  String get readAndAcceptAgbSuffix => translate('readAndAcceptAgbSuffix');
+  String get acceptCompliancePrefix => translate('acceptCompliancePrefix');
+  String get complianceLinkText => translate('complianceLinkText');
+  String get acceptComplianceSuffix => translate('acceptComplianceSuffix');
+  String get agreePrivacyPrefix => translate('agreePrivacyPrefix');
+  String get privacyLinkText => translate('privacyLinkText');
+  String get agreePrivacySuffix => translate('agreePrivacySuffix');
+  String get confirmFrameworkPrefix => translate('confirmFrameworkPrefix');
+  String get frameworkLinkText => translate('frameworkLinkText');
+  String get confirmFrameworkSuffix => translate('confirmFrameworkSuffix');
+
   String get failed => translate('failed');
 }
 

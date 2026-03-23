@@ -1329,5 +1329,18 @@ class UrduFile {
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
     'kioskShopRole': 'کھوکھا / دکان',
+    'legalDocumentsTitle': 'قانونی دستاویزات',
+    'readAndAcceptAgbPrefix': 'میں نے پڑھ لیا ہے اور میں قبول کرتا ہوں ',
+    'agbLinkText': 'شرائط و ضوابط (AGB)',
+    'readAndAcceptAgbSuffix': '۔',
+    'acceptCompliancePrefix': 'میں قبول کرتا ہوں ',
+    'complianceLinkText': 'تعمیل کے رہنما خطوط (ٹریڈ مارک اور پروڈکٹ کی سالمیت)',
+    'acceptComplianceSuffix': '۔',
+    'agreePrivacyPrefix': 'میں متفق ہوں ',
+    'privacyLinkText': 'رازداری کی پالیسی',
+    'agreePrivacySuffix': ' اور ڈیٹا کی منتقلی سے۔',
+    'confirmFrameworkPrefix': 'میں تصدیق کرتا ہوں کہ میں نے پڑھ لیا ہے ',
+    'frameworkLinkText': 'ایپ کے استعمال کا فریم ورک معاہدہ',
+    'confirmFrameworkSuffix': '۔',
   };
 }

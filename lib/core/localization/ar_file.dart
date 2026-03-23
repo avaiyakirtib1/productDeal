@@ -1327,5 +1327,18 @@ class ArabicFile {
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
     'kioskShopRole': 'كشك / متجر',
+    'legalDocumentsTitle': 'الوثائق القانونية',
+    'readAndAcceptAgbPrefix': 'لقد قرأت وأوافق على ',
+    'agbLinkText': 'الشروط والأحكام العامة (AGB)',
+    'readAndAcceptAgbSuffix': '.',
+    'acceptCompliancePrefix': 'أوافق على ',
+    'complianceLinkText': 'إرشادات الامتثال (العلامات التجارية وسلامة المنتجات)',
+    'acceptComplianceSuffix': '.',
+    'agreePrivacyPrefix': 'أوافق على ',
+    'privacyLinkText': 'سياسة الخصوصية',
+    'agreePrivacySuffix': ' ونقل البيانات.',
+    'confirmFrameworkPrefix': 'أؤكد أنني قرأت ',
+    'frameworkLinkText': 'الاتفاقية الإطارية لاستخدام التطبيق',
+    'confirmFrameworkSuffix': '.',
   };
 }

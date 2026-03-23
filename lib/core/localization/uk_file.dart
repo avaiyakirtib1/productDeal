@@ -1341,5 +1341,18 @@ class UkrainianFile {
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
     'kioskShopRole': 'Кіоск / Магазин',
+    'legalDocumentsTitle': 'Юридичні документи',
+    'readAndAcceptAgbPrefix': 'Я прочитав(ла) та приймаю ',
+    'agbLinkText': 'Загальні умови (AGB)',
+    'readAndAcceptAgbSuffix': '.',
+    'acceptCompliancePrefix': 'Я приймаю ',
+    'complianceLinkText': 'Керівництво щодо дотримання нормативних вимог',
+    'acceptComplianceSuffix': '.',
+    'agreePrivacyPrefix': 'Я погоджуюсь з ',
+    'privacyLinkText': 'Політикою конфіденційності',
+    'agreePrivacySuffix': ' та передачею даних.',
+    'confirmFrameworkPrefix': 'Я підтверджую, що прочитав(ла) ',
+    'frameworkLinkText': 'Рамкову угоду про використання додатку',
+    'confirmFrameworkSuffix': '.',
   };
 }

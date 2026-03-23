@@ -1329,5 +1329,18 @@ class RussianFile {
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
     'kioskShopRole': 'Киоск / Магазин',
+    'legalDocumentsTitle': 'Юридические документы',
+    'readAndAcceptAgbPrefix': 'Я прочитал(а) и принимаю ',
+    'agbLinkText': 'Общие условия (AGB)',
+    'readAndAcceptAgbSuffix': '.',
+    'acceptCompliancePrefix': 'Я принимаю ',
+    'complianceLinkText': 'Руководство по соблюдению нормативных требований',
+    'acceptComplianceSuffix': '.',
+    'agreePrivacyPrefix': 'Я соглашаюсь с ',
+    'privacyLinkText': 'Политикой конфиденциальности',
+    'agreePrivacySuffix': ' и передачей данных.',
+    'confirmFrameworkPrefix': 'Я подтверждаю, что прочитал(а) ',
+    'frameworkLinkText': 'Рамочное соглашение об использовании приложения',
+    'confirmFrameworkSuffix': '.',
   };
 }

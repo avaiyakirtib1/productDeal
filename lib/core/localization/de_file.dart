@@ -1388,5 +1388,18 @@ class GermanFile {
     'notificationAdminCustomTitle': '{0}',
     'notificationAdminCustomBody': '{0}',
     'kioskShopRole': 'Kiosk / Shop',
+    'legalDocumentsTitle': 'Rechtliche Dokumente',
+    'readAndAcceptAgbPrefix': 'Ich habe die ',
+    'agbLinkText': 'Allgemeinen Geschäftsbedingungen (AGB)',
+    'readAndAcceptAgbSuffix': ' gelesen und akzeptiere diese.',
+    'acceptCompliancePrefix': 'Ich akzeptiere die ',
+    'complianceLinkText': 'Compliance-Richtlinie (Markenrecht & Produktintegrität)',
+    'acceptComplianceSuffix': '.',
+    'agreePrivacyPrefix': 'Ich stimme der ',
+    'privacyLinkText': 'Datenschutzerklärung',
+    'agreePrivacySuffix': ' und Datenübermittlung zu.',
+    'confirmFrameworkPrefix': 'Ich bestätige, dass ich den ',
+    'frameworkLinkText': 'Rahmenvertrag zur Nutzung der App',
+    'confirmFrameworkSuffix': ' gelesen habe.',
   };
 }
