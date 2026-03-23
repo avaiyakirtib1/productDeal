@@ -221,11 +221,9 @@ class _LanguageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(
-        Icons.language,
-        color: isSelected
-            ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).colorScheme.onSurfaceVariant,
+      leading: Text(
+        language.flag,
+        style: const TextStyle(fontSize: 24),
       ),
       title: Text(language.displayName),
       subtitle: Text(_getLanguageNativeName(language)),

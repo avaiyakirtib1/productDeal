@@ -55,18 +55,19 @@ class AppLanguages {
 /// App language enum for language selection screen.
 /// Must stay in sync with [AppLanguages.supportedCodes].
 enum AppLanguage {
-  english('en', 'English'),
-  german('de', 'Deutsch'),
-  turkish('tr', 'Turkish'),
-  arabic('ar', 'Arabic'),
-  urdu('ur', 'Urdu'),
-  hindi('hi', 'Hindi'),
-  russian('ru', 'Russian'),
-  ukrainian('uk', 'Українська');
+  english('en', 'English', '🇬🇧'),
+  german('de', 'Deutsch', '🇩🇪'),
+  turkish('tr', 'Turkish', '🇹🇷'),
+  arabic('ar', 'Arabic', '🇸🇦'),
+  urdu('ur', 'Urdu', '🇵🇰'),
+  hindi('hi', 'Hindi', '🇮🇳'),
+  russian('ru', 'Russian', '🇷🇺'),
+  ukrainian('uk', 'Українська', '🇺🇦');
 
   final String code;
   final String displayName;
-  const AppLanguage(this.code, this.displayName);
+  final String flag;
+  const AppLanguage(this.code, this.displayName, this.flag);
 
   static AppLanguage fromCode(String code) {
     return AppLanguage.values.firstWhere(

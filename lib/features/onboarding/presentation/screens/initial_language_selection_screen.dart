@@ -75,6 +75,7 @@ class InitialLanguageSelectionScreen extends ConsumerWidget {
                   final language = AppLanguage.fromCode(code);
                   return _OnboardingLanguageTile(
                     displayName: name,
+                    flag: language.flag,
                     isSelected: isSelected,
                     onTap: () => languageController.setLanguage(language),
                   );
@@ -103,11 +104,13 @@ class InitialLanguageSelectionScreen extends ConsumerWidget {
 class _OnboardingLanguageTile extends StatelessWidget {
   const _OnboardingLanguageTile({
     required this.displayName,
+    required this.flag,
     required this.isSelected,
     required this.onTap,
   });
 
   final String displayName;
+  final String flag;
   final bool isSelected;
   final VoidCallback onTap;
 
@@ -127,12 +130,9 @@ class _OnboardingLanguageTile extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             child: Row(
               children: [
-                Icon(
-                  Icons.language,
-                  color: isSelected
-                      ? AppColors.primary
-                      : Theme.of(context).colorScheme.onSurfaceVariant,
-                  size: 24,
+                Text(
+                  flag,
+                  style: const TextStyle(fontSize: 24),
                 ),
                 const SizedBox(width: 16),
                 Expanded(

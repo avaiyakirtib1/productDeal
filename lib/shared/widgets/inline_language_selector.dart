@@ -40,6 +40,7 @@ class InlineLanguageSelector extends StatelessWidget {
               label: AppLanguages.contentLanguageNames[
                       availableLanguages[i]] ??
                   availableLanguages[i],
+              flag: AppLanguage.fromCode(availableLanguages[i]).flag,
               selected: availableLanguages[i] == currentValue,
               primaryColor: primary,
               isMobile: isMobile,
@@ -55,6 +56,7 @@ class InlineLanguageSelector extends StatelessWidget {
 class _LanguageCard extends StatelessWidget {
   const _LanguageCard({
     required this.label,
+    required this.flag,
     required this.selected,
     required this.primaryColor,
     required this.isMobile,
@@ -62,6 +64,7 @@ class _LanguageCard extends StatelessWidget {
   });
 
   final String label;
+  final String flag;
   final bool selected;
   final Color primaryColor;
   final bool isMobile;
@@ -130,10 +133,9 @@ class _LanguageCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.language,
-                      size: iconSize,
-                      color: selected ? primaryColor : muted,
+                    Text(
+                      flag,
+                      style: TextStyle(fontSize: iconSize),
                     ),
                     SizedBox(height: iconTextGap),
                     Text(
